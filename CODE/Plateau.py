@@ -111,8 +111,9 @@ class Plateau:
         '''
         Teste si les deux senseis sont toujours sur le plateau
         '''
-
-        if (self.voiePierre() or not(self.voieRuisseau())) :
+        print("ruisseau",self.voieRuisseau())
+        print("pierre",self.voiePierre())
+        if (not(self.voiePierre()) or self.voieRuisseau()) :
             return True
         else : 
             return False
