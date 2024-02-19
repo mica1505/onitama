@@ -85,14 +85,14 @@ class Plateau:
             if i==2:
                 self.pions.append(self.creerSensei("Bleu",(0,i)))
                 self.pions.append(self.creerSensei("Rouge",(4,i)))
-                self.grille[0][i] = 'd'
-                self.grille[4][i] = 'd'
+                self.grille[0][i] = 's'
+                self.grille[4][i] = 's'
 
             else:
                 self.pions.append(self.creerDisciple("Bleu",(0,i)))
                 self.pions.append(self.creerDisciple("Rouge",(4,i)))
-                self.grille[0][i] = 's'
-                self.grille[4][i] = 's'
+                self.grille[0][i] = 'd'
+                self.grille[4][i] = 'd'
 
 
 
