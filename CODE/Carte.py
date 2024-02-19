@@ -16,6 +16,3 @@ class Carte:
     
     def getCouleur(self):
         return self.couleur
-    
-
-    

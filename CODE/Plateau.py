@@ -12,7 +12,9 @@ class Plateau:
         self.joueurBleu = joueurBleu
         self.joueurRouge = joueurRouge
         self.pions = [] #liste des pions dispo sur le plateau au debut ya tous les pions
-        
+        self.rs = True
+        self.bs = True
+
     def __str__(self):
         '''
         
@@ -24,7 +26,6 @@ class Plateau:
                 res+= self.grille[i][j] + " "
         return res
 
-
     def bougerPion(self,posPrec,posSuiv):
         '''
         
@@ -33,30 +34,12 @@ class Plateau:
         self.grille[posSuiv[0]][posSuiv[1]]=self.grille[posPrec[0]][posPrec[1]]
         #verifier si on a bouffe un pion adverse
     #pour initialiser la carte du jeu et aussi echanger la carte du plateau avec notre carte
-        
-    def setCarte(self, carte):
-        '''
-        
-        '''
-        self.carte = carte
 
     def getCarte(self):
         '''
         
         '''
         return self.carte
-    
-    def getPioche(self):
-        '''
-        
-        '''
-        return self.pioche
-    
-    def gameOver(self):
-        '''
-        Teste si les deux senseis sont toujours sur la plateau
-        '''
-        return
     
     def creerSensei(self,couleur,pos):
         '''
@@ -85,25 +68,38 @@ class Plateau:
             if i==2:
                 self.pions.append(self.creerSensei("Bleu",(0,i)))
                 self.pions.append(self.creerSensei("Rouge",(4,i)))
-                self.grille[0][i] = 's'
-                self.grille[4][i] = 's'
+                self.grille[0][i] = 'R'
+                self.grille[4][i] = 'B'
 
             else:
                 self.pions.append(self.creerDisciple("Bleu",(0,i)))
                 self.pions.append(self.creerDisciple("Rouge",(4,i)))
-                self.grille[0][i] = 'd'
-                self.grille[4][i] = 'd'
-
-
-
-    def premierJoueur(self):
-        '''
-        
-        '''
-        return self.carte.getCouleur() # soit on retourne la chaine de caractere soit on retourne le joueur
+                self.grille[0][i] = 'r'
+                self.grille[4][i] = 'b'
     
-    def initCartePlateau(self):
-        '''
+    def echange(self, carte):
+        temp=self.carte
+        self.carte=carte
+        carte=temp
+        return temp
+    
+    def voiePierre(self) : #gagner en mangeant le sensei adverse
+        if (self.rs == True and self.bs == True) : 
+            return True
+        else : 
+            return False
         
+    def voieRuisseau(self) : #gagner en déplacant son sensei sur le temple adverse
+        if self.grille[4][2] == "R" or self.grille[0][2] == 'B' :
+            return True
+        else : 
+            return False
+    
+    def gameOver(self):
         '''
-        return 
+        Teste si les deux senseis sont toujours sur le plateau
+        '''
+        if (not(self.voiePierre()) or not(self.voieRuisseau())) :
+            return True
+        else : 
+            return False

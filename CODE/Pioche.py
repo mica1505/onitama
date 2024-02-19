@@ -22,12 +22,6 @@ class Pioche :
                        "Menthe":("Rouge",[(0,-1),(-1,1),(1,1)]),
                        "Coque":("Rouge",[(-1,-1),(1,1),(-1,0),(1,0)]),
                        "Grue":("Bleu",[(-1,-1),(1,-1),(0,1)])}
-        
-    def getMouvs(self,nom):
-        '''
-        
-        '''
-        return self.cartes[nom]
     
     def melange(self):
         '''
@@ -36,6 +30,6 @@ class Pioche :
         randCarte = random.sample(list(self.cartes.keys()),5)
         cartesDist = []
         for c in randCarte:
-            cartesDist.append(str(Carte(c,self.cartes[c][1],self.cartes[c][0])))
+            cartesDist.append(Carte(c,self.cartes[c][1],self.cartes[c][0]))
                 
         return cartesDist

@@ -3,12 +3,14 @@ class Joueur :
         '''
         
         '''
-        self.cartes=cartes
+       
+        self.cartes = cartes
         self.pions=pions #on les passe depuis le plateau au lancement du jeu
         self.couleur=couleur
         self.ia=ia
         if ia == True :
             self.difficulte=difficulte
 
-
+    def getCartes(self) :
+        return self.cartes
 
