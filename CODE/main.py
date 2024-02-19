@@ -1,7 +1,12 @@
 from Pioche import Pioche
 from Joueur import Joueur
 from Plateau import Plateau
+from Mouvement import Mouvement
 
+print("1. Jeu humain vs humain.")
+print("2. Jeu humain vs ia.")
+print("3. Jeu ia vs ia.")
+jeu = int(input())
 
 pioche = Pioche()
 cartes = pioche.melange()
@@ -21,21 +26,23 @@ else :
 while gameOn :
     print("Carte plateau : \n" + str(cartePlateau))
     if tour%2 == 1 :
-        print("Tour du joueurRouge.")
+        print("Tour du joueur rouge.")
         print("Carte du joueur rouge : \n" + "1. " + str(joueurRouge.getCartes()[0]) + "\n2. " + str(joueurRouge.getCartes()[1]))
        
         choix = int(input("Choisissez la carte a jouer : "))
-       
+        print("Choisir la piece a jouer : ")
         i = int(input("Entrer la ligne : "))
         j = int(input("Entrer la colonne : "))
 
+        piece = ()
+        coups = Mouvement(plateau, piece, joueurRouge.getCartes()[choix-1].getMouvs())
+        print("Choisir le deplacement a effectue : ")
         mouvement=False
         while(not(mouvement)) : #tant que le mouvement n'est pas autorisé
             i = int(input("Entrer la ligne : "))
             j = int(input("Entrer la colonne : "))
         tour+=1
         cartePlateau = plateau.echange()
-
 
     if tour%2 == 0 :
         print("Tour du joueur bleu.")
@@ -47,6 +54,8 @@ while gameOn :
         while(not(mouvement)) : #tant que le mouvement n'est pas autorisé
             i = int(input("Entrer la ligne : "))
             j = int(input("Entrer la colonne : "))
+            piece = ()
+            coups = Mouvement(plateau, piece, joueurRouge.getCartes()[choix-1].getMouvs())
 
         tour+=1
         cartePlateau = plateau.echange()

@@ -26,15 +26,12 @@ class Plateau:
                 res+= self.grille[i][j] + " "
         return res
 
-    def bougerPion(self,posPrec,posSuiv):
-        '''
-        
-        '''
-        #je pense aue ca va faire appelle a une fonction de la classe Pion
-        self.grille[posSuiv[0]][posSuiv[1]]=self.grille[posPrec[0]][posPrec[1]]
-        #verifier si on a bouffe un pion adverse
-    #pour initialiser la carte du jeu et aussi echanger la carte du plateau avec notre carte
-
+    def getGrille(self):
+        return self.grille
+    
+    def getPion(self):
+        return self.pions
+    
     def getCarte(self):
         '''
         
@@ -78,18 +75,25 @@ class Plateau:
                 self.grille[4][i] = 'b'
     
     def echange(self, carte):
+        """
+        """
         temp=self.carte
         self.carte=carte
         carte=temp
         return temp
     
     def voiePierre(self) : #gagner en mangeant le sensei adverse
+        """
+
+        """
         if (self.rs == True and self.bs == True) : 
             return True
         else : 
             return False
         
     def voieRuisseau(self) : #gagner en déplacant son sensei sur le temple adverse
+        """
+        """
         if self.grille[4][2] == "R" or self.grille[0][2] == 'B' :
             return True
         else : 

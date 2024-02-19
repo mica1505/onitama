@@ -1,5 +1,4 @@
 class Carte:
-
     def __init__(self,nom,mouvements,couleur):
         self.nom = nom
         self.mouvements = mouvements
@@ -16,3 +15,6 @@ class Carte:
     
     def getCouleur(self):
         return self.couleur
+    
+    def getMouvs(self):
+        return self.mouvements
