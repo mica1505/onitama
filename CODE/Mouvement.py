@@ -18,23 +18,24 @@ class Mouvement :
     def couleurPion(self): 
         """
         """
-        if self.pion.getCouleur() == "Rouge" :
+        if self.piece.getCouleur() == "Rouge" :
             return "r"
         else : 
             return  'b'
         
     def couleurSensei(self):
-        if self.pion.getCouleur() == "Rouge" :
+        if self.piece.getCouleur() == "Rouge" :
             return "R"
         else : 
             return  'B'
         
     def listeCoupsPossibles(self) :
         coups = []
+        print(self.piece.getPos())
         for deplacement in self.deplacements :
             x = self.piece.getPos()[0] + deplacement[0]
             y = self.piece.getPos()[1] + deplacement[1]
-            if self.positionValide(deplacement) and (self.plateau[x][y] == "." or self.plateau[x][y]!=self.couleurPion() or self.plateau[x][y]!=self.couleurSensei()) :
+            if self.positionValide(deplacement) and (self.plateau.getGrille()[x][y] == "." or self.plateau.getGrille()[x][y]!=self.couleurPion() or self.plateau.getGrille()[x][y]!=self.couleurSensei()) :
                 coups.append(deplacement)
         return coups
     

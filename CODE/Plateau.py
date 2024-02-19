@@ -2,15 +2,15 @@ from Pion import Pion
 
 class Plateau:
     #le constructeur cree un plateau vide apres on rajoute les pions uand on cree la classe pion
-    def __init__(self,joueurBleu,joueurRouge,carte):
+    def __init__(self,joueurRouge,joueurBleu,carte):
         '''
         Pioche -> None
         '''
         self.dim=5
         self.grille = []
         self.carte = carte #la carte du plateau
-        self.joueurBleu = joueurBleu
         self.joueurRouge = joueurRouge
+        self.joueurBleu = joueurBleu
         self.pions = [] #liste des pions dispo sur le plateau au debut ya tous les pions
         self.rs = True
         self.bs = True
@@ -60,17 +60,25 @@ class Plateau:
             for j in range(self.dim):
                 ligne.append('.')
             self.grille.append(ligne)
-        print(self.grille)
+        
         for i in range(5):
             if i==2:
-                self.pions.append(self.creerSensei("Bleu",(0,i)))
-                self.pions.append(self.creerSensei("Rouge",(4,i)))
+                senseiRouge = self.creerSensei("Rouge",(0,i))
+                senseiBleu = self.creerSensei("Bleu",(4,i))
+                self.pions.append(senseiRouge)
+                self.pions.append(senseiBleu)
+                self.joueurRouge.setPions(senseiRouge)
+                self.joueurBleu.setPions(senseiBleu)
                 self.grille[0][i] = 'R'
                 self.grille[4][i] = 'B'
 
             else:
-                self.pions.append(self.creerDisciple("Bleu",(0,i)))
-                self.pions.append(self.creerDisciple("Rouge",(4,i)))
+                discipleRouge = self.creerDisciple("Rouge",(0,i))
+                discipleBleu = self.creerDisciple("Bleu",(4,i))
+                self.pions.append(discipleRouge)
+                self.pions.append(discipleBleu)
+                self.joueurRouge.setPions(discipleRouge)
+                self.joueurBleu.setPions(discipleBleu)
                 self.grille[0][i] = 'r'
                 self.grille[4][i] = 'b'
     
@@ -103,7 +111,8 @@ class Plateau:
         '''
         Teste si les deux senseis sont toujours sur le plateau
         '''
-        if (not(self.voiePierre()) or not(self.voieRuisseau())) :
+
+        if (self.voiePierre() or not(self.voieRuisseau())) :
             return True
         else : 
             return False

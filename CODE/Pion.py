@@ -4,6 +4,9 @@ class Pion:
         self.pos = pos
         self.sensei=sensei #true si la piece est le sensei
 
+    def getCouleur(self) :
+        return self.couleur
+    
     def getPos(self) :
         return self.pos
 
