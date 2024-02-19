@@ -1,25 +1,29 @@
-
+from Pion import Pion
 
 class Plateau:
     #le constructeur cree un plateau vide apres on rajoute les pions uand on cree la classe pion
-    def __init__(self,pioche):
+    def __init__(self,joueurBleu,joueurRouge,carte):
         '''
         Pioche -> None
         '''
         self.dim=5
-        self.grille = [['.' for i in range(self.dim)]*self.dim]
+        self.grille = []
+        self.carte = carte #la carte du plateau
+        self.joueurBleu = joueurBleu
+        self.joueurRouge = joueurRouge
         self.pions = [] #liste des pions dispo sur le plateau au debut ya tous les pions
-        self.carte = None #la carte du plateau
-        self.pioche = pioche
-
+        
     def __str__(self):
         '''
         
         '''
+        res = ""
         for i in range(self.dim):
-            print("\n")
-            for j in range(self.dim):
-                print(self.grille[i][j])
+            res+="\n"
+            for j  in range(self.dim):
+                res+= self.grille[i][j] + " "
+        return res
+
 
     def bougerPion(self,posPrec,posSuiv):
         '''
@@ -54,3 +58,52 @@ class Plateau:
         '''
         return
     
+    def creerSensei(self,couleur,pos):
+        '''
+        
+        '''
+        return Pion(couleur,pos,True)
+    
+    def creerDisciple(self,couleur,pos):
+        '''
+        
+        '''
+        return Pion(couleur,pos,False)
+    
+    def initPlateau(self):
+        '''
+        
+        '''
+
+        for i in range(self.dim) :
+            ligne = []
+            for j in range(self.dim):
+                ligne.append('.')
+            self.grille.append(ligne)
+        print(self.grille)
+        for i in range(5):
+            if i==2:
+                self.pions.append(self.creerSensei("Bleu",(0,i)))
+                self.pions.append(self.creerSensei("Rouge",(4,i)))
+                self.grille[0][i] = 'd'
+                self.grille[4][i] = 'd'
+
+            else:
+                self.pions.append(self.creerDisciple("Bleu",(0,i)))
+                self.pions.append(self.creerDisciple("Rouge",(4,i)))
+                self.grille[0][i] = 's'
+                self.grille[4][i] = 's'
+
+
+
+    def premierJoueur(self):
+        '''
+        
+        '''
+        return self.carte.getCouleur() # soit on retourne la chaine de caractere soit on retourne le joueur
+    
+    def initCartePlateau(self):
+        '''
+        
+        '''
+        return 
