@@ -2,14 +2,15 @@
 
 class Plateau:
     #le constructeur cree un plateau vide apres on rajoute les pions uand on cree la classe pion
-    def __init__(self):
+    def __init__(self,pioche):
         '''
-        
+        Pioche -> None
         '''
         self.dim=5
         self.grille = [['.' for i in range(self.dim)]*self.dim]
         self.pions = [] #liste des pions dispo sur le plateau au debut ya tous les pions
         self.carte = None #la carte du plateau
+        self.pioche = pioche
 
     def __str__(self):
         '''
@@ -40,6 +41,12 @@ class Plateau:
         
         '''
         return self.carte
+    
+    def getPioche(self):
+        '''
+        
+        '''
+        return self.pioche
     
     def gameOver(self):
         '''
