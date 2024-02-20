@@ -31,9 +31,7 @@ class Mouvement :
         
     def listeCoupsPossibles(self) :
         coups = []
-        print(self.piece.getPos())
         for deplacement in self.deplacements :
-            print(deplacement)
             if self.couleurPion() == "b" or self.couleurSensei() == "B" :
                 x = self.piece.getPos()[0] + deplacement[0]*(-1)
                 y = self.piece.getPos()[1] + deplacement[1]
@@ -58,7 +56,7 @@ class Mouvement :
         """
         temp = self.piece.getPos()
         symbole = self.plateau.getGrille()[temp[0]][temp[1]]
-        
+
         self.plateau.getGrille()[coup[0]][coup[1]]=symbole
         self.piece.setPos(coup)
         self.plateau.getGrille()[temp[0]][temp[1]]="."

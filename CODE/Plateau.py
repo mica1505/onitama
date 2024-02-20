@@ -82,13 +82,13 @@ class Plateau:
                 self.grille[0][i] = 'r'
                 self.grille[4][i] = 'b'
     
-    def echange(self, carte,):
+    def echange(self, joueur, carte):
         """
         """
-        temp=self.carte
+        joueur.removeCarte(carte)
+        joueur.setCarte(self.carte)
         self.carte=carte
-        carte=temp
-        return temp
+        return self.carte
     
     def voiePierre(self) : #gagner en mangeant le sensei adverse
         """
