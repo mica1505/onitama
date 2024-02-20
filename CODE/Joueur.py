@@ -7,6 +7,7 @@ class Joueur :
         self.pions=[] #on les passe depuis le plateau au lancement du jeu
         self.couleur=couleur
         self.ia=ia
+        self.score = self.somVal()
         if ia == True :
             self.difficulte=difficulte
 
@@ -25,5 +26,15 @@ class Joueur :
     def setPions(self,pion) :
         self.pions.append(pion)
 
+    def getScore(self):
+        return self.score
+
     def removePion(self,pion) : 
         self.pions.remove(pion)
+
+    def somVal(self):
+        res=0
+        for p in self.pions:
+            res+=p.getValeur()
+
+        return res

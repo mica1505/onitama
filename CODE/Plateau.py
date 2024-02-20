@@ -38,6 +38,12 @@ class Plateau:
         '''
         return self.carte
     
+    def getJoueurRouge(self):
+        return self.joueurRouge
+    
+    def getJoueurBleu(self):
+        return self.joueurBleu
+    
     def creerSensei(self,couleur,pos):
         '''
         
@@ -117,3 +123,6 @@ class Plateau:
             return True
         else : 
             return False
+        
+    def coupGagnant(self):
+        return not(self.voiePierre()) or self.voieRuisseau()
