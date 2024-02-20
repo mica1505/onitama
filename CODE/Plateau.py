@@ -82,7 +82,7 @@ class Plateau:
                 self.grille[0][i] = 'r'
                 self.grille[4][i] = 'b'
     
-    def echange(self, carte):
+    def echange(self, carte,):
         """
         """
         temp=self.carte

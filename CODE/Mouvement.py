@@ -7,8 +7,8 @@ class Mouvement :
     def positionValide(self,pos):
         """
         """
-        x = self.piece.getPos()[0] + pos[0]
-        y = self.piece.getPos()[1] + pos[1]
+        x = pos[0]
+        y = pos[1]
 
         if((x>=0 and x<5) and (y>=0 and y<5)) :
             return True
@@ -33,10 +33,15 @@ class Mouvement :
         coups = []
         print(self.piece.getPos())
         for deplacement in self.deplacements :
-            x = self.piece.getPos()[0] + deplacement[0]
-            y = self.piece.getPos()[1] + deplacement[1]
-            if self.positionValide(deplacement) and (self.plateau.getGrille()[x][y] == "." or self.plateau.getGrille()[x][y]!=self.couleurPion() or self.plateau.getGrille()[x][y]!=self.couleurSensei()) :
-                coups.append(deplacement)
+            print(deplacement)
+            if self.couleurPion() == "b" or self.couleurSensei() == "B" :
+                x = self.piece.getPos()[0] + deplacement[0]*(-1)
+                y = self.piece.getPos()[1] + deplacement[1]
+            else :
+                x = self.piece.getPos()[0] + deplacement[0]
+                y = self.piece.getPos()[1] + deplacement[1]
+            if self.positionValide((x,y)) and (self.plateau.getGrille()[x][y] == "." and (self.plateau.getGrille()[x][y]!=self.couleurPion() or self.plateau.getGrille()[x][y]!=self.couleurSensei())) :
+                coups.append((x,y))
         return coups
     
     def coupAutorise(self,coup) :
@@ -53,7 +58,7 @@ class Mouvement :
         """
         temp = self.piece.getPos()
         symbole = self.plateau.getGrille()[temp[0]][temp[1]]
-
+        
         self.plateau.getGrille()[coup[0]][coup[1]]=symbole
         self.piece.setPos(coup)
         self.plateau.getGrille()[temp[0]][temp[1]]="."

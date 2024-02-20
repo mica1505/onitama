@@ -61,6 +61,7 @@ while gameOn :
             while j!=1 :
                 j=int(input("Entrer le numéro du coup 1 : "))
         coups.deplacer(listeCoups[j-1])
+        cartePlateau = plateau.echange(joueurRouge.getCartes()[choixCarte-1])
 
     if tour%2 == 0 :
         print("Tour du joueur bleu.")
@@ -99,9 +100,10 @@ while gameOn :
             while j!=1 :
                 j=int(input("Entrer le numéro du coup 1 : "))
         coups.deplacer(listeCoups[j-1])
+        cartePlateau = plateau.echange(joueurBleu.getCartes()[choixCarte-1])
 
     tour+=1
-    cartePlateau = plateau.echange(carte)
+    
             
     print(str(plateau.gameOver()))
     if plateau.gameOver() :
