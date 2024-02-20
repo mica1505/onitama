@@ -51,9 +51,14 @@ class Mouvement :
         else :
             return False
         
-    def deplacer(self, coup) : 
+    def deplacer(self, joueur, coup) : 
         """
         """
+        # x = coup[0]
+        # y= coup[1]
+        # if self.couleurPion() == "r" or self.couleurSensei() == "R" :
+        #     if self.plateau.getGrille()[x][y] == "b" :
+
         temp = self.piece.getPos()
         symbole = self.plateau.getGrille()[temp[0]][temp[1]]
 
