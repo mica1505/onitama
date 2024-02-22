@@ -1,8 +1,4 @@
 class Mouvement : 
-    def __init__(self, plateau, piece, deplacements) :
-        self.plateau = plateau
-        self.piece=piece
-        self.deplacements=deplacements
 
     def positionValide(pos):
         """
@@ -15,38 +11,39 @@ class Mouvement :
         else :
             return False
     
-    def couleurPion(self): 
+    def couleurPion(piece): 
         """
         """
-        if self.piece.getCouleur() == "Rouge" :
+        if piece.getCouleur() == "Rouge" :
             return "r"
         else : 
             return  'b'
         
-    def couleurSensei(self):
-        if self.piece.getCouleur() == "Rouge" :
+    def couleurSensei(piece):
+        if piece.getCouleur() == "Rouge" :
             return "R"
         else : 
             return  'B'
 
-    def senseiAdverse(self):
-        if self.couleurSensei() == "B":
+    def senseiAdverse(piece):
+        if Mouvement.couleurSensei(piece) == "B":
             return "R"
         else : 
             return "B" 
-    def listeCoupsPossibles(self) :
+        
+    def listeCoupsPossibles(plateau,deplacements,piece) :
         '''
         Retourne la liste des coups possibles pour une piece
         '''
         coups = []
-        for deplacement in self.deplacements :
-            if self.couleurPion() == "b" or self.couleurSensei() == "B" :
-                x = self.piece.getPos()[0] + deplacement[0]*(-1)
-                y = self.piece.getPos()[1] + deplacement[1]
+        for deplacement in deplacements :
+            if Mouvement.couleurPion(piece) == "b" or Mouvement.couleurSensei(piece) == "B" :
+                x = piece.getPos()[0] + deplacement[0]*(-1)
+                y = piece.getPos()[1] + deplacement[1]
             else :
-                x = self.piece.getPos()[0] + deplacement[0]
-                y = self.piece.getPos()[1] + deplacement[1]
-            if Mouvement.positionValide((x,y)) and (self.plateau.getGrille()[x][y] == "." and (self.plateau.getGrille()[x][y]!=self.couleurPion() or self.plateau.getGrille()[x][y]!=self.couleurSensei())) :
+                x = piece.getPos()[0] + deplacement[0]
+                y = piece.getPos()[1] + deplacement[1]
+            if Mouvement.positionValide((x,y)) and (plateau.getGrille()[x][y] == "." and (plateau.getGrille()[x][y]!=Mouvement.couleurPion(piece) or plateau.getGrille()[x][y]!=Mouvement.couleurSensei(piece))) :
                 coups.append((x,y))
         return coups
     
@@ -66,22 +63,22 @@ class Mouvement :
         return res
 
         
-    def deplacer(self, coup) : 
+    def deplacer(plateau,piece,coup) : 
         """
         """
 
-        temp = self.piece.getPos()
-        symbole = self.plateau.getGrille()[temp[0]][temp[1]]
-        
-        if self.plateau.getGrille()[coup[0]][coup[1]] == self.senseiAdverse():
-            if self.senseiAdverse() == "B":
-                self.plateau.captureSenseiBleu()
+        temp = piece.getPos()
+        symbole = plateau.getGrille()[temp[0]][temp[1]]
+
+        if plateau.getGrille()[coup[0]][coup[1]] == Mouvement.senseiAdverse(piece):
+            if Mouvement.senseiAdverse(piece) == "B":
+                plateau.captureSenseiBleu()
             else : 
-                self.plateau.captureSenseiRouge()
+                plateau.captureSenseiRouge()
 
-        self.plateau.getGrille()[coup[0]][coup[1]]=symbole
-        self.piece.setPos(coup)
-        self.plateau.getGrille()[temp[0]][temp[1]]="."
+        plateau.getGrille()[coup[0]][coup[1]]=symbole
+        piece.setPos(coup)
+        plateau.getGrille()[temp[0]][temp[1]]="."
 
 
 

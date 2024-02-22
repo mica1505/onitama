@@ -29,9 +29,9 @@ def joueur1(joueurRouge, plateau) :
         i = int(input("Entrer le numéro de la piece : "))
 
     choixPion = joueurRouge.getPions()[i-1]
-    coups = Mouvement(plateau, choixPion, carte.getMouvs())
+
     print("Choisir le deplacement a effectuer.")
-    listeCoups=coups.listeCoupsPossibles()
+    listeCoups=Mouvement.listeCoupsPossibles(plateau,carte.getMouvs(),choixPion)
     print(listeCoups)
     
     j=0
@@ -41,7 +41,7 @@ def joueur1(joueurRouge, plateau) :
     else :
         while j!=1 :
             j=int(input("Entrer le numéro du coup 1 : "))
-    coups.deplacer(listeCoups[j-1])
+    Mouvement.deplacer(plateau,choixPion,listeCoups[j-1])
     return plateau.echange(joueurRouge, carte)
 
 def joueur2(joueurBleu, plateau) : 
@@ -66,9 +66,8 @@ def joueur2(joueurBleu, plateau) :
         i = int(input("Entrer le numéro de la piece : "))
     choixPion = joueurBleu.getPions()[i-1]
 
-    coups = Mouvement(plateau, choixPion, carte.getMouvs())
     print("Choisir le deplacement a effectuer.")
-    listeCoups=coups.listeCoupsPossibles()
+    listeCoups=Mouvement.listeCoupsPossibles(plateau,carte.getMouvs(),choixPion)
     print(listeCoups)
 
     j=0
@@ -78,7 +77,7 @@ def joueur2(joueurBleu, plateau) :
     else :
         while j!=1 :
             j=int(input("Entrer le numéro du coup 1 : "))
-    coups.deplacer(listeCoups[j-1])
+    Mouvement.deplacer(plateau,choixPion,listeCoups[j-1])
     return plateau.echange(joueurBleu, carte)
 
 
