@@ -4,7 +4,7 @@ class Mouvement :
         self.piece=piece
         self.deplacements=deplacements
 
-    def positionValide(self,pos):
+    def positionValide(pos):
         """
         """
         x = pos[0]
@@ -28,8 +28,16 @@ class Mouvement :
             return "R"
         else : 
             return  'B'
-        
+
+    def senseiAdverse(self):
+        if self.couleurSensei() == "B":
+            return "R"
+        else : 
+            return "B" 
     def listeCoupsPossibles(self) :
+        '''
+        Retourne la liste des coups possibles pour une piece
+        '''
         coups = []
         for deplacement in self.deplacements :
             if self.couleurPion() == "b" or self.couleurSensei() == "B" :
@@ -38,29 +46,38 @@ class Mouvement :
             else :
                 x = self.piece.getPos()[0] + deplacement[0]
                 y = self.piece.getPos()[1] + deplacement[1]
-            if self.positionValide((x,y)) and (self.plateau.getGrille()[x][y] == "." and (self.plateau.getGrille()[x][y]!=self.couleurPion() or self.plateau.getGrille()[x][y]!=self.couleurSensei())) :
+            if Mouvement.positionValide((x,y)) and (self.plateau.getGrille()[x][y] == "." and (self.plateau.getGrille()[x][y]!=self.couleurPion() or self.plateau.getGrille()[x][y]!=self.couleurSensei())) :
                 coups.append((x,y))
         return coups
     
-    def coupAutorise(self,coup) :
+    def pionAutorise(pions,coups) :
         """
+        on recupere tous les pions et on garde que ceux qu'on peut bouger
+        si parmis les coups a jouer ya un coup valide on l'ajoute a la liste
         """
-        listeCoupsPossibles = self.listeCoupsPossibles()
-        if coup in listeCoupsPossibles :
-            return True
-        else :
-            return False
+        res = []
+        for p in pions :
+            x=p.getPos()[0]
+            y = p.getPos()[1]
+            for c in coups :
+                if Mouvement.positionValide((x+c[0],y+c[1])):
+                    if p.getPos() not in res:
+                        res.append(p.getPos())
+        return res
+
         
-    def deplacer(self, joueur, coup) : 
+    def deplacer(self, coup) : 
         """
         """
-        # x = coup[0]
-        # y= coup[1]
-        # if self.couleurPion() == "r" or self.couleurSensei() == "R" :
-        #     if self.plateau.getGrille()[x][y] == "b" :
 
         temp = self.piece.getPos()
         symbole = self.plateau.getGrille()[temp[0]][temp[1]]
+        
+        if self.plateau.getGrille()[coup[0]][coup[1]] == self.senseiAdverse():
+            if self.senseiAdverse() == "B":
+                self.plateau.captureSenseiBleu()
+            else : 
+                self.plateau.captureSenseiRouge()
 
         self.plateau.getGrille()[coup[0]][coup[1]]=symbole
         self.piece.setPos(coup)

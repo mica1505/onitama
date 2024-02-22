@@ -20,16 +20,26 @@ class Plateau:
         
         '''
         res = ""
+        c = 0
         for i in range(self.dim):
             res+="\n"
             for j  in range(self.dim):
                 res+= self.grille[i][j] + " "
+            if i==2:
+                print(c)
+                res+='\t Carte Plateau -> ' + str(self.carte)
         return res
 
     def getGrille(self):
+        '''
+        
+        '''
         return self.grille
     
     def getPion(self):
+        '''
+        
+        '''
         return self.pions
     
     def getCarte(self):
@@ -39,9 +49,15 @@ class Plateau:
         return self.carte
     
     def getJoueurRouge(self):
+        '''
+        
+        '''
         return self.joueurRouge
     
     def getJoueurBleu(self):
+        '''
+        
+        '''
         return self.joueurBleu
     
     def creerSensei(self,couleur,pos):
@@ -55,6 +71,12 @@ class Plateau:
         
         '''
         return Pion(couleur,pos,False)
+    
+    def captureSenseiBleu(self):
+        self.bs = False
+
+    def captureSenseiRouge(self):
+        self.rs = False
     
     def initPlateau(self):
         '''
@@ -100,10 +122,7 @@ class Plateau:
         """
 
         """
-        if (self.rs == True and self.bs == True) : 
-            return True
-        else : 
-            return False
+        return self.bs and self.rs
         
     def voieRuisseau(self) : #gagner en déplacant son sensei sur le temple adverse
         """

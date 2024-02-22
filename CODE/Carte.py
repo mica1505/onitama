@@ -11,7 +11,7 @@ class Carte:
         mouvs = ""
         for m in self.mouvements:
             mouvs += str(m) 
-        return self.nom + ' : ' + mouvs
+        return self.nom + '('+self.couleur+')'+' : ' + mouvs
     
     def getCouleur(self):
         return self.couleur
