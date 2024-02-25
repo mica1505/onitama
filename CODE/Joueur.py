@@ -36,5 +36,14 @@ class Joueur :
         res=0
         for p in self.pions:
             res+=p.getValeur()
-
         return res
+    
+    def getPion(self,pos):
+        for p in self.pions:
+            if p.getPos() == pos:
+                return p
+    
+    def supPion(self,pos):
+        p = self.getPion(pos)
+        if p != None :
+            self.pions.remove(p)

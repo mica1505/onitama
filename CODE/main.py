@@ -42,6 +42,7 @@ def joueur1(joueurRouge, plateau) :
         while j!=1 :
             j=int(input("Entrer le numéro du coup 1 : "))
     Mouvement.deplacer(plateau,choixPion,listeCoups[j-1])
+    print(plateau.getListePions())
     return plateau.echange(joueurRouge, carte)
 
 def joueur2(joueurBleu, plateau) : 

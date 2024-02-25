@@ -36,7 +36,7 @@ class Plateau:
         '''
         return self.grille
     
-    def getPion(self):
+    def getListePions(self):
         '''
         
         '''
@@ -122,7 +122,7 @@ class Plateau:
         """
 
         """
-        return self.bs and self.rs
+        return not(self.bs and self.rs)
         
     def voieRuisseau(self) : #gagner en déplacant son sensei sur le temple adverse
         """
@@ -145,3 +145,17 @@ class Plateau:
         
     def coupGagnant(self):
         return not(self.voiePierre()) or self.voieRuisseau()
+    
+    def getPion(self,pos):
+        for p in self.pions :
+            if p.getPos() == pos:
+                return p
+        
+    def supPion(self,pos):
+        p = self.getPion(pos)
+        if p != None:
+            self.pions.remove(p)
+            self.joueurBleu.supPion(pos)
+            self.joueurRouge.supPion(pos)
+
+    
