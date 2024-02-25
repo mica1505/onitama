@@ -25,6 +25,12 @@ class Mouvement :
         else : 
             return  'B'
 
+    def discipleAdverse(piece):
+        if Mouvement.couleurPion(piece) == "B":
+            return "r"
+        else : 
+            return "b" 
+        
     def senseiAdverse(piece):
         if Mouvement.couleurSensei(piece) == "B":
             return "R"
@@ -45,9 +51,11 @@ class Mouvement :
                 y = piece.getPos()[1] + deplacement[1]
             if Mouvement.positionValide((x,y)) and (plateau.getGrille()[x][y] == "." and (plateau.getGrille()[x][y]!=Mouvement.couleurPion(piece) or plateau.getGrille()[x][y]!=Mouvement.couleurSensei(piece))) :
                 coups.append((x,y))
+            elif Mouvement.positionValide((x,y)) and (plateau.getGrille()[x][y] != "." and (plateau.getGrille()[x][y]!=Mouvement.discipleAdverse(piece) or plateau.getGrille()[x][y]!=Mouvement.senseiAdverse(piece))):
+                coups.append((x,y))
         return coups
     
-    def pionAutorise(pions,coups) :
+    def pionAutorise(plateau,pions,coups) :
         """
         on recupere tous les pions et on garde que ceux qu'on peut bouger
         si parmis les coups a jouer ya un coup valide on l'ajoute a la liste
@@ -56,10 +64,20 @@ class Mouvement :
         for p in pions :
             x=p.getPos()[0]
             y = p.getPos()[1]
+            print("x1 : ",x)
+            print("y1 : ",y)
             for c in coups :
-                if Mouvement.positionValide((x+c[0],y+c[1])):
+                print("coups : ",coups)
+                print("c : ", c)
+
+                if Mouvement.positionValide((x+c[0],y+c[1])) and (plateau.getGrille()[x+c[0]][y+c[1]]!=Mouvement.couleurPion(p) or plateau.getGrille()[x+c[0]][y+c[1]]!=Mouvement.couleurSensei(p)) :
+                    print("x2 : ",x+c[0])
+                    print("y2 : ",y+c[1])
+                    print("couleur1 : ",Mouvement.couleurPion(p))
+                    print("couleur2 : ",Mouvement.couleurSensei(p))
                     if p.getPos() not in res:
                         res.append(p.getPos())
+                        print("res : ", res)
         return res
 
         

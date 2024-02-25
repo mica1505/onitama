@@ -18,7 +18,7 @@ def joueur1(joueurRouge, plateau) :
     carte=joueurRouge.getCartes()[choixCarte-1]
 
     print("pions : ")
-    pions = Mouvement.pionAutorise(joueurRouge.getPions(),carte.getMouvs()) 
+    pions = Mouvement.pionAutorise(plateau,joueurRouge.getPions(),carte.getMouvs()) 
     print(pions)
     i=0
     while i<1 or i>len(pions) :
@@ -54,7 +54,7 @@ def joueur2(joueurBleu, plateau) :
     carte=joueurBleu.getCartes()[choixCarte-1]
 
     print("pions : ")
-    pions = Mouvement.pionAutorise(joueurBleu.getPions(),carte.getMouvs()) 
+    pions = Mouvement.pionAutorise(plateau,joueurBleu.getPions(),carte.getMouvs()) 
     print(pions)
 
     i = 0
