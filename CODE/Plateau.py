@@ -5,6 +5,7 @@ class Plateau:
     def __init__(self,joueurRouge,joueurBleu,carte):
         '''
         Pioche -> None
+        Initialisation d'un plateau
         '''
         self.dim=5
         self.grille = []
@@ -17,7 +18,7 @@ class Plateau:
 
     def __str__(self):
         '''
-        
+        Retourne sous forme de chaine de caractere le plateau et la carte du plateau
         '''
         res = ""
         c = 0
@@ -32,55 +33,61 @@ class Plateau:
 
     def getGrille(self):
         '''
-        
+        Retourne la grille du plateau
         '''
         return self.grille
     
     def getListePions(self):
         '''
-        
+        Retourne les pions sur le plateau
         '''
         return self.pions
     
     def getCarte(self):
         '''
-        
+        Retourne la carte du plateau
         '''
         return self.carte
     
     def getJoueurRouge(self):
         '''
-        
+        Retourne le joueur rouge
         '''
         return self.joueurRouge
     
     def getJoueurBleu(self):
         '''
-        
+        Retourne le joueur bleu
         '''
         return self.joueurBleu
     
     def creerSensei(self,couleur,pos):
         '''
-        
+        Creer une piece sensei
         '''
         return Pion(couleur,pos,True)
     
     def creerDisciple(self,couleur,pos):
         '''
-        
+        Creer une piece disciple
         '''
         return Pion(couleur,pos,False)
     
     def captureSenseiBleu(self):
+        '''
+        Retourne false lorsque le sensei bleu est mange sinon True
+        '''
         self.bs = False
 
     def captureSenseiRouge(self):
+        '''
+        Retourne false quand le sensei rouge est mange sinon True
+        '''
         self.rs = False
     
     def initPlateau(self):
         '''
-        
+        Initialise le plateau de jeu
         '''
 
         for i in range(self.dim) :
@@ -95,8 +102,8 @@ class Plateau:
                 senseiBleu = self.creerSensei("Bleu",(4,i))
                 self.pions.append(senseiRouge)
                 self.pions.append(senseiBleu)
-                self.joueurRouge.setPions(senseiRouge)
-                self.joueurBleu.setPions(senseiBleu)
+                self.joueurRouge.setListePions(senseiRouge)
+                self.joueurBleu.setListePions(senseiBleu)
                 self.grille[0][i] = 'R'
                 self.grille[4][i] = 'B'
 
@@ -105,13 +112,20 @@ class Plateau:
                 discipleBleu = self.creerDisciple("Bleu",(4,i))
                 self.pions.append(discipleRouge)
                 self.pions.append(discipleBleu)
-                self.joueurRouge.setPions(discipleRouge)
-                self.joueurBleu.setPions(discipleBleu)
+                self.joueurRouge.setListePions(discipleRouge)
+                self.joueurBleu.setListePions(discipleBleu)
                 self.grille[0][i] = 'r'
                 self.grille[4][i] = 'b'
-    
+
+    def copierPlateau(self):
+        nouveauPlateau = Plateau(self.joueurRouge,self.joueurBleu,self.carte)
+        nouveauPlateau.dim = self.dim
+        nouveauPlateau.rs = self.rs
+        nouveauPlateau.bs = self.bs
+            
     def echange(self, joueur, carte):
         """
+        Echange la carte du plateau avec la carte joue par un joueur
         """
         joueur.removeCarte(carte)
         joueur.setCarte(self.carte)
@@ -120,12 +134,13 @@ class Plateau:
     
     def voiePierre(self) : #gagner en mangeant le sensei adverse
         """
-
+        Retourne false si un sensei a ete mange sinon True pour dire que les 2 senseis sont en vies
         """
-        return not(self.bs and self.rs)
+        return self.bs and self.rs
         
     def voieRuisseau(self) : #gagner en déplacant son sensei sur le temple adverse
         """
+        Retourne True si un sensei a atteint le temple adverse sinon False
         """
         if self.grille[4][2] == "R" or self.grille[0][2] == 'B' :
             return True
@@ -134,11 +149,11 @@ class Plateau:
     
     def gameOver(self):
         '''
-        Teste si les deux senseis sont toujours sur le plateau
+        Retourne True si une des conditions de victoire a ete realisee sinon False
         '''
         print("ruisseau",self.voieRuisseau())
         print("pierre",self.voiePierre())
-        if (not(self.voiePierre()) or self.voieRuisseau()) :
+        if not(self.voiePierre()) or self.voieRuisseau() :
             return True
         else : 
             return False
@@ -147,15 +162,30 @@ class Plateau:
         return not(self.voiePierre()) or self.voieRuisseau()
     
     def getPion(self,pos):
+        """
+        Retourne un pion du plateau
+        """
         for p in self.pions :
             if p.getPos() == pos:
                 return p
         
     def supPion(self,pos):
+        """
+        Supprime un pion du plateau
+        """
         p = self.getPion(pos)
         if p != None:
             self.pions.remove(p)
             self.joueurBleu.supPion(pos)
             self.joueurRouge.supPion(pos)
 
+    def joueurGagnant(self):
+        """
+        Retourne le joueur gagnant
+        """
+        if not(self.rs) or self.grille[0][2] == 'B' :
+            return "B"
+        else : 
+            return "R"
+        
     

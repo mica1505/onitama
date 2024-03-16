@@ -18,7 +18,7 @@ def joueur1(joueurRouge, plateau) :
     carte=joueurRouge.getCartes()[choixCarte-1]
 
     print("pions : ")
-    pions = Mouvement.pionAutorise(plateau,joueurRouge.getPions(),carte.getMouvs()) 
+    pions = Mouvement.listePionsAutorises(plateau,joueurRouge.getListePions(),carte.getMouvs()) 
     print(pions)
     i=0
     while i<1 or i>len(pions) :
@@ -28,7 +28,7 @@ def joueur1(joueurRouge, plateau) :
             print("Choissisez le pion 1.")
         i = int(input("Entrer le numéro de la piece : "))
 
-    choixPion = joueurRouge.getPions()[i-1]
+    choixPion = joueurRouge.getListePions()[i-1]
 
     print("Choisir le deplacement a effectuer.")
     listeCoups=Mouvement.listeCoupsPossibles(plateau,carte.getMouvs(),choixPion)
@@ -55,7 +55,7 @@ def joueur2(joueurBleu, plateau) :
     carte=joueurBleu.getCartes()[choixCarte-1]
 
     print("pions : ")
-    pions = Mouvement.pionAutorise(plateau,joueurBleu.getPions(),carte.getMouvs()) 
+    pions = Mouvement.listePionsAutorises(plateau,joueurBleu.getListePions(),carte.getMouvs()) 
     print(pions)
 
     i = 0
@@ -65,7 +65,7 @@ def joueur2(joueurBleu, plateau) :
         else :
             print("Choissisez le pion 1.")
         i = int(input("Entrer le numéro de la piece : "))
-    choixPion = joueurBleu.getPions()[i-1]
+    choixPion = joueurBleu.getListePions()[i-1]
 
     print("Choisir le deplacement a effectuer.")
     listeCoups=Mouvement.listeCoupsPossibles(plateau,carte.getMouvs(),choixPion)
@@ -90,7 +90,6 @@ def partie() :
     joueurBleu = Joueur(cartes[2:4],"Bleu",None,None)
     plateau = Plateau(joueurRouge,joueurBleu,cartes[-1])
     plateau.initPlateau()
-
     gameOn = True
     cartePlateau = plateau.getCarte()
     if cartePlateau.getCouleur() == "Rouge" :
@@ -110,7 +109,6 @@ def partie() :
         #on check si ya un coup gagnant si oui on arrete le jeu sinon tour suivant
         tour+=1
                 
-        print(str(plateau.gameOver()))
         if plateau.gameOver() :
             gameOn = False
 

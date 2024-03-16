@@ -3,7 +3,7 @@ from Carte import Carte
 class Pioche :
     def __init__(self):
         '''
-        
+        Initialise la pioche du jeu
         '''
         #chaque carte a une couleur
         self.cartes = {"Dragon":("Rouge",[(1,-2),(-1,-1),(-1,1),(1,2)]),
@@ -25,7 +25,7 @@ class Pioche :
     
     def melange(self):
         '''
-        
+        Distribue de maniere aleatoire les cartes de la partie
         '''
         randCarte = random.sample(list(self.cartes.keys()),5)
         cartesDist = []

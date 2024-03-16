@@ -2,6 +2,7 @@ class Mouvement :
 
     def positionValide(pos):
         """
+        Vérifie que la position est sur le plateau
         """
         x = pos[0]
         y = pos[1]
@@ -13,6 +14,7 @@ class Mouvement :
     
     def couleurPion(piece): 
         """
+        Retourne la couleur du pion
         """
         if piece.getCouleur() == "Rouge" :
             return "r"
@@ -20,6 +22,9 @@ class Mouvement :
             return  'b'
         
     def couleurSensei(piece):
+        """
+        Retourne la couleur du sensei
+        """
         if piece.getCouleur() == "Rouge" :
             return "R"
         else : 
@@ -43,48 +48,49 @@ class Mouvement :
         '''
         coups = []
         for deplacement in deplacements :
-            if Mouvement.couleurPion(piece) == "b" or Mouvement.couleurSensei(piece) == "B" :
+            if Mouvement.couleurPion(piece) == "b" or Mouvement.couleurSensei(piece) == "B" : #Verifie la couleur de la piece pour que les coordonnees des déplacements soient corrects sur les axes
                 x = piece.getPos()[0] + deplacement[0]*(-1)
                 y = piece.getPos()[1] + deplacement[1]
             else :
                 x = piece.getPos()[0] + deplacement[0]
                 y = piece.getPos()[1] + deplacement[1]
-            if Mouvement.positionValide((x,y)) and (plateau.getGrille()[x][y] == "." and (plateau.getGrille()[x][y]!=Mouvement.couleurPion(piece) or plateau.getGrille()[x][y]!=Mouvement.couleurSensei(piece))) :
+            
+
+            if Mouvement.positionValide((x,y)) and plateau.getGrille()[x][y] == "." and (plateau.getGrille()[x][y]!=Mouvement.couleurPion(piece) or plateau.getGrille()[x][y]!=Mouvement.couleurSensei(piece)) : #Si la case est vide
                 coups.append((x,y))
-            elif Mouvement.positionValide((x,y)) and (plateau.getGrille()[x][y] != "." and ((plateau.getGrille()[x][y]==Mouvement.discipleAdverse(piece) or plateau.getGrille()[x][y]==Mouvement.senseiAdverse(piece)) 
-                                                                                            and 
-                                                                                            (plateau.getGrille()[x][y]!=Mouvement.couleurPion(piece) or plateau.getGrille()[x][y]!=Mouvement.couleurSensei(piece)))):
+            elif Mouvement.positionValide((x,y)) and plateau.getGrille()[x][y] != "." and (plateau.getGrille()[x][y]==Mouvement.discipleAdverse(piece) or plateau.getGrille()[x][y]==Mouvement.senseiAdverse(piece)) : #Si la case est occupe par une piece adverse
                 coups.append((x,y))
         return coups
     
-    def pionAutorise(plateau,pions,coups) :
+    def pionAutorise(plateau,pion,coup) :
         """
-        on recupere tous les pions et on garde que ceux qu'on peut bouger
-        si parmis les coups a jouer ya un coup valide on l'ajoute a la liste
+        Return True si le coup du pion est autorise sinon False
         """
-        res = []
+        x = pion.getPos()[0] + coup[0]
+        y = pion.getPos()[1] + coup[1]
+
+        if Mouvement.positionValide((x,y)) and (plateau.getGrille()[x][y] == "." or plateau.getGrille()[x][y]==Mouvement.discipleAdverse(pion) and plateau.getGrille()[x][y]==Mouvement.senseiAdverse(pion)) :
+            return True
+        else : 
+            return False
+    
+    def listePionsAutorises(plateau,pions,coups) :
+        """
+        on recupere tous les pions et on retourne les pions qui peuvent se deplacer
+        si un coup est possible avec le pion, on ajoute le pion a la liste
+        """
+        pions_joue = []
         for p in pions :
-            x=p.getPos()[0]
-            y = p.getPos()[1]
-            # print("x1 : ",x)
-            # print("y1 : ",y)
-            for c in coups :
-            #     print("coups : ",coups)
-            #     print("c : ", c)
+            for coup in coups :
+                if Mouvement.pionAutorise(plateau, p, coup) :
+                    if p.getPos() not in pions_joue :
+                        pions_joue.append(p.getPos())
 
-                if Mouvement.positionValide((x+c[0],y+c[1])) and (plateau.getGrille()[x+c[0]][y+c[1]]!=Mouvement.couleurPion(p) or plateau.getGrille()[x+c[0]][y+c[1]]!=Mouvement.couleurSensei(p)) :
-                    # print("x2 : ",x+c[0])
-                    # print("y2 : ",y+c[1])
-                    # print("couleur1 : ",Mouvement.couleurPion(p))
-                    # print("couleur2 : ",Mouvement.couleurSensei(p))
-                    if p.getPos() not in res:
-                        res.append(p.getPos())
-                        # print("res : ", res)
-        return res
-
+        return pions_joue
         
     def deplacer(plateau,piece,coup) : 
         """
+        Deplace le pion en fonction du coup choisi
         """
         if plateau.getGrille()[coup[0]][coup[1]] == Mouvement.senseiAdverse(piece):
             if Mouvement.senseiAdverse(piece) == "B":
@@ -92,14 +98,12 @@ class Mouvement :
             else : 
                 plateau.captureSenseiRouge()
 
-        temp = piece.getPos()
-        symbole = plateau.getGrille()[temp[0]][temp[1]]
-        if symbole != ".":
-            plateau.supPion(coup) 
-        plateau.getGrille()[coup[0]][coup[1]]=symbole
-        piece.setPos(coup)
-        plateau.getGrille()[temp[0]][temp[1]]="."
+        temp = piece.getPos() #position du pion a deplace
+        symbole = plateau.getGrille()[temp[0]][temp[1]] #symbole du pion a deplace
+        if symbole != "." : #si la case est occupee
+            plateau.supPion(coup)
 
+        plateau.getGrille()[coup[0]][coup[1]] = symbole #change le symbole sur la case a deplace
+        piece.setPos(coup) #deplace le pion sur la case
+        plateau.getGrille()[temp[0]][temp[1]] = "." #change la case precedente du pion en case vide
 
-
-    
