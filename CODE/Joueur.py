@@ -85,3 +85,9 @@ class Joueur :
         for p in self.pions :
             if p.getSensei():
                 return p
+            
+    def getDifficulte(self):
+        """
+        Retourne la difficulte de l'ia
+        """ 
+        return self.difficulte

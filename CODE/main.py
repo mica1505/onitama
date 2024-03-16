@@ -2,7 +2,6 @@ from Pioche import Pioche
 from Joueur import Joueur
 from Plateau import Plateau
 from Mouvement import Mouvement
-
 # print("1. Jeu humain vs humain.")
 # print("2. Jeu humain vs ia.")
 # print("3. Jeu ia vs ia.")

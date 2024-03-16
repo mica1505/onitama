@@ -1,5 +1,6 @@
 from Plateau import Plateau
 from Mouvement import Mouvement
+import copy
 
 #minimax
 #alpha_beta
@@ -63,7 +64,7 @@ def alphabeta(plateau, profondeur, alpha, beta, max) :
                     continue
 
                 for move in carte :
-                    #child = Plateau(plateau) trouver un moyen de copier le plateau
+                    child = copy.deepcopy(plateau)
                     arrive = Mouvement.pionAutorise(child,piece,move)
 
                     if arrive == True : 
