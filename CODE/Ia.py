@@ -83,8 +83,9 @@ def alphabeta(plateau, profondeur, alpha, beta, max) :
                         if val < retVal :
                             val = retVal
                             if alpha < val :
-                                if profondeur == plateau.getJoueurRouge().getIa() :
-                                    meilleurCoup = [piece,carte,coup]
+                                if plateau.getJoueurRouge().getIa() == True :
+                                    if profondeur == plateau.getJoueurRouge().getIa() :
+                                        meilleurCoup = [piece,carte,coup]
 
                                 alpha = val
                                 if beta <= alpha :

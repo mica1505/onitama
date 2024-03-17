@@ -135,8 +135,8 @@ def partie() :
 def partieIaAlphabeta() :
     pioche = Pioche()
     cartes = pioche.melange()
-    joueurRouge = Joueur(cartes[:2],"Rouge",None,None)
-    joueurBleu = Joueur(cartes[2:4],"Bleu",True,2)
+    joueurRouge = Joueur(cartes[:2],"Rouge",False,None)
+    joueurBleu = Joueur(cartes[2:4],"Bleu",True,4)
     plateau = Plateau(joueurRouge,joueurBleu,cartes[-1])
     plateau.initPlateau()
     gameOn = True

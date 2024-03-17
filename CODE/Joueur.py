@@ -97,3 +97,9 @@ class Joueur :
         Retourne la difficulte de l'ia
         """ 
         return self.difficulte
+    
+    def getIa(self):
+        """
+        Retourne True si le joueur est une ia
+        """
+        return self.ia
