@@ -24,28 +24,29 @@ def joueur1(joueurRouge, plateau) :
         listePions.append(pions[i].getPos())
     print(listePions)
     i=0
-    while i<1 or i>len(pions)-1 :
-        if len(pions) > 1 :
-            print("Choissisez une piece entre 1 et " + str(len(pions)-1))
+    if len(listePions) != 0 :
+        while i<1 or i>len(pions)-1 :
+            if len(pions) > 1 :
+                print("Choissisez une piece entre 1 et " + str(len(pions)-1))
+            else :
+                print("Choissisez le pion 1.")
+            i = int(input("Entrer le numéro de la piece : "))
+
+        choixPion = pions[i-1]
+
+        print("Choisir le deplacement a effectuer.")
+        listeCoups=Mouvement.listeCoupsPossibles(plateau,carte.getMouvs(),choixPion)
+        print(listeCoups)
+        
+        j=0
+        if len(listeCoups)>1 :
+            while j<1 or j>len(listeCoups):
+                j = int(input("Entrer le numéro du coup que vous souhaitez jouer : "))
         else :
-            print("Choissisez le pion 1.")
-        i = int(input("Entrer le numéro de la piece : "))
-
-    choixPion = pions[i-1]
-
-    print("Choisir le deplacement a effectuer.")
-    listeCoups=Mouvement.listeCoupsPossibles(plateau,carte.getMouvs(),choixPion)
-    print(listeCoups)
-    
-    j=0
-    if len(listeCoups)>1 :
-        while j<1 or j>len(listeCoups):
-            j = int(input("Entrer le numéro du coup que vous souhaitez jouer : "))
-    else :
-        while j!=1 :
-            j=int(input("Entrer le numéro du coup 1 : "))
-    Mouvement.deplacer(plateau,choixPion,listeCoups[j-1])
-    print(plateau.getListePions())
+            while j!=1 :
+                j=int(input("Entrer le numéro du coup 1 : "))
+        Mouvement.deplacer(plateau,choixPion,listeCoups[j-1])
+        print(plateau.getListePions())
     return plateau.echange(joueurRouge, carte)
 
 def joueur2(joueurBleu, plateau) : 
@@ -65,38 +66,45 @@ def joueur2(joueurBleu, plateau) :
     print(listePions)
 
     i = 0
-    while i<1 or i>len(pions) :
-        if len(pions) > 1 :
-            print("Choissisez une piece entre 1 et " + str(len(pions)-1))
+
+    if len(listePions) != 0 :
+        while i<1 or i>len(pions) :
+            if len(pions) > 1 :
+                print("Choissisez une piece entre 1 et " + str(len(pions)-1))
+            else :
+                print("Choissisez le pion 1.")
+            i = int(input("Entrer le numéro de la piece : "))
+        choixPion = pions[i-1]
+
+        print("Choisir le deplacement a effectuer.")
+        listeCoups=Mouvement.listeCoupsPossibles(plateau,carte.getMouvs(),choixPion)
+        print(listeCoups)
+
+        j=0
+        if len(listeCoups)>1 :
+            while j<1 or j>len(listeCoups):
+                j = int(input("Entrer le numéro du coup que vous souhaitez jouer : "))
         else :
-            print("Choissisez le pion 1.")
-        i = int(input("Entrer le numéro de la piece : "))
-    choixPion = pions[i-1]
-
-    print("Choisir le deplacement a effectuer.")
-    listeCoups=Mouvement.listeCoupsPossibles(plateau,carte.getMouvs(),choixPion)
-    print(listeCoups)
-
-    j=0
-    if len(listeCoups)>1 :
-        while j<1 or j>len(listeCoups):
-            j = int(input("Entrer le numéro du coup que vous souhaitez jouer : "))
-    else :
-        while j!=1 :
-            j=int(input("Entrer le numéro du coup 1 : "))
-    Mouvement.deplacer(plateau,choixPion,listeCoups[j-1])
+            while j!=1 :
+                j=int(input("Entrer le numéro du coup 1 : "))
+        Mouvement.deplacer(plateau,choixPion,listeCoups[j-1])
     return plateau.echange(joueurBleu, carte)
 
-def joueurIaAlphabeta(plateau,joueurBleu, profondeur) :
+def joueurIaAlphabeta(plateau,joueurBleu, profondeur, max) :
     print("Tour du joueur BLEU.")
     print("Cartes : \n" + "1. " + str(joueurBleu.getCartes()[0]) + "\n2. " + str(joueurBleu.getCartes()[1]))
-    meilleurCoup = meilleur_coup_alpha_beta(plateau,profondeur, False)
+    if max :
+        meilleurCoup = meilleur_coup_alpha_beta(plateau,profondeur,joueurBleu, joueurBleu)
+    else :
+        meilleurCoup = meilleur_coup_alpha_beta(plateau,profondeur,plateau.getJoueurRouge(),joueurBleu)
+
+    print("main--------------------------------",meilleurCoup)
     #meilleurCoup = piece,carte,move
     pion = meilleurCoup[0]
     carte = meilleurCoup[1]
     coup = meilleurCoup[2]
     
-    print("main--------------------------------",str(carte))
+    print("main--------------------------------",str(meilleurCoup),str(carte))
     print("pion pos : ",pion.getPos())
     Mouvement.deplacer(plateau,pion,coup)
     return plateau.echange(joueurBleu, carte)
@@ -141,11 +149,13 @@ def partieIaAlphabeta() :
     plateau.initPlateau()
     gameOn = True
     cartePlateau = plateau.getCarte()
+    max = False 
 
     if cartePlateau.getCouleur() == "Rouge" :
         tour = 1
     else :
         tour = 0
+        max = True
         
     while gameOn :
         print(plateau)
@@ -154,7 +164,7 @@ def partieIaAlphabeta() :
             cartePlateau = joueur1(joueurRouge, plateau)
 
         if tour%2 == 0 :
-            cartePlateau = joueurIaAlphabeta(plateau,joueurBleu,4)
+            cartePlateau = joueurIaAlphabeta(plateau,joueurBleu, 1, max)
 
         #on check si ya un coup gagnant si oui on arrete le jeu sinon tour suivant
         tour+=1

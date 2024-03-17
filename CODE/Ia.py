@@ -36,32 +36,39 @@ def minimax(plateau, profondeur, alpha, beta, max):
         return plateau
     
 #a finir et test
-def alphabeta(plateau, profondeur, alpha, beta, max) :
+def alphabeta(plateau, profondeur, alpha, beta, joueurMax, joueurActif) :
+    listeMeilleursCoups = []
     if plateau.gameOver() :
         if plateau.joueurGagnant == "R" :
-            return 100 + profondeur, None
+            return 100 + profondeur
         else : 
-            return -(100 + profondeur), None
+            return -(100 + profondeur),
     
     if profondeur <= 0 : 
-        # nbPieceActuelles = len(plateau.getJoueurRouge().getListePions())
-        # nbPieceAdversaire = len(plateau.getJoueurBleu().getListePions())
+        nbPieceActuelles = len(joueurActif.getListePions())
+        redSensei = plateau.getJoueurRouge().getSensei()
+        blueSensei = plateau.getJoueurBleu().getSensei()
 
-        # redSensei = plateau.getJoueurRouge().getSensei()
-        # blueSensei = plateau.getJoueurBleu().getSensei()
+        if joueurActif.getCouleur() == "Rouge" :
+            nbPieceAdversaire = len(plateau.getJoueurBleu().getListePions())
+            proximite_actuelle = ((redSensei.getPos()[0]-blueSensei.getPos()[0])*(redSensei.getPos()[0]-blueSensei.getPos()[0])) + ((redSensei.getPos()[1]-blueSensei.getPos()[1])*(redSensei.getPos()[1]-blueSensei.getPos()[1]))
+            proximite_adversaire = ((blueSensei.getPos()[0]-redSensei.getPos()[0])*(blueSensei.getPos()[0]-redSensei.getPos()[0])) + ((blueSensei.getPos()[1]-redSensei.getPos()[1])*(blueSensei.getPos()[1]-redSensei.getPos()[1]))
+        else :
+            nbPieceAdversaire = len(plateau.getJoueurRouge().getListePions())
+            proximite_actuelle = ((blueSensei.getPos()[0]-redSensei.getPos()[0])*(blueSensei.getPos()[0]-redSensei.getPos()[0])) + ((blueSensei.getPos()[1]-redSensei.getPos()[1])*(blueSensei.getPos()[1]-redSensei.getPos()[1]))
+            proximite_adversaire = ((redSensei.getPos()[0]-blueSensei.getPos()[0])*(redSensei.getPos()[0]-blueSensei.getPos()[0])) + ((redSensei.getPos()[1]-blueSensei.getPos()[1])*(redSensei.getPos()[1]-blueSensei.getPos()[1]))
+        
 
-        # proximite_actuelle = ((redSensei.getPos()[0]-blueSensei.getPos()[0])*(redSensei.getPos()[0]-blueSensei.getPos()[0])) + ((redSensei.getPos()[1]-blueSensei.getPos()[1])*(redSensei.getPos()[1]-blueSensei.getPos()[1]))
-        # proximité_adversaire = ((blueSensei.getPos()[0]-redSensei.getPos()[0])*(blueSensei.getPos()[0]-redSensei.getPos()[0])) + ((blueSensei.getPos()[1]-redSensei.getPos()[1])*(blueSensei.getPos()[1]-redSensei.getPos()[1]))
-
-        # return (nbPieceActuelles-proximite_actuelle) - (nbPieceAdversaire-proximité_adversaire)
-        return eval(plateau, plateau.getJoueurRouge() if max else plateau.getJoueurBleu()), None
+        return (nbPieceActuelles-proximite_actuelle) - (nbPieceAdversaire-proximite_adversaire), None
+        # return eval(plateau, joueurMax), listeMeilleursCoups
     
-    if max :
-        val = float('-inf')
-        for carte in plateau.getJoueurRouge().getCartes() :
+    if joueurActif == joueurMax :
+        val = eval(plateau, joueurMax)
+        #meilleurCoup = None
+        for carte in joueurActif.getCartes() :
             if carte == None : 
                 continue
-            for piece in plateau.getJoueurRouge().getListePions() :
+            for piece in joueurActif.getListePions() :
                 if piece == None : 
                     continue
 
@@ -74,31 +81,28 @@ def alphabeta(plateau, profondeur, alpha, beta, max) :
 
                     if arrive == True : 
                         Mouvement.deplacer(child,piece,coup)
-
-                        retVal, _ = alphabeta(child,profondeur-1,alpha,beta,False)
-
+                        
+                        retVal, _ = alphabeta(child,profondeur-1,alpha,beta,joueurMax, joueurActif)
                         piece.setPos(depart)
-                        meilleurCoup = [piece,carte,coup]
-                        print("meilleurCOup dans max : ",meilleurCoup)
+                        
                         if val < retVal :
                             val = retVal
+                            listeMeilleursCoups = [[piece,carte,coup]]
                             if alpha < val :
-                                if plateau.getJoueurRouge().getIa() == True :
-                                    if profondeur == plateau.getJoueurRouge().getIa() :
-                                        meilleurCoup = [piece,carte,coup]
-
                                 alpha = val
                                 if beta <= alpha :
-                                    return val, meilleurCoup
+                                    return val#, meilleurCoup
                         elif val == retVal :
-                            return val, meilleurCoup
-        return val, meilleurCoup
+                            listeMeilleursCoups.append([piece,carte,coup])
+                        #     meilleurCoup = [piece,carte,coup]
+        return val, listeMeilleursCoups
     else :
-        val = float('-inf')
-        for carte in plateau.getJoueurBleu().getCartes() :
+        val = eval(plateau, joueurActif)
+        # meilleurCoup = None
+        for carte in joueurActif.getCartes() :
             if carte == None : 
                 continue
-            for piece in plateau.getJoueurBleu().getListePions() :
+            for piece in joueurActif.getListePions() :
                 if piece == None : 
                     continue
                 
@@ -112,20 +116,22 @@ def alphabeta(plateau, profondeur, alpha, beta, max) :
                     if arrive == True :
                         Mouvement.deplacer(child,piece,coup)
 
-                        retVal, _ = alphabeta(child,profondeur-1,alpha,beta,True)
-
+                        retVal, _ = alphabeta(child,profondeur-1,alpha,beta,joueurMax, joueurActif)
                         piece.setPos(depart)
-                        meilleurCoup = [piece,carte,coup]
-                        print("meilleurCOup dans min : ",piece.getPos(), coup)
+
                         if val > retVal :
                             val = retVal
+                            listeMeilleursCoups = [[piece,carte,coup]]
                             if beta > val :
                                 beta = val
                                 if beta <= alpha :
-                                    return val, meilleurCoup
-        return val, meilleurCoup
+                                    return val#, meilleurCoup
+                        elif val == retVal :
+                            listeMeilleursCoups.append([piece,carte,coup])
+        return val, listeMeilleursCoups#, meilleurCoup
 
-def meilleur_coup_alpha_beta(plateau,profondeur, max) :
-    val, meilleurCoup = alphabeta(plateau, profondeur, float('-inf'), float('inf'), max)
+def meilleur_coup_alpha_beta(plateau,profondeur, joueurMax, joueurMin) :
+    val, meilleurCoup = alphabeta(plateau, profondeur, float('-inf'), float('inf'), joueurMax, joueurMin)
     print("meilleurCOup dans max : ",meilleurCoup)
-    return  meilleurCoup
+    choix = random.randint(0,len(meilleurCoup)-1)
+    return meilleurCoup[choix]
