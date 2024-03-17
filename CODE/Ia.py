@@ -61,7 +61,7 @@ def alphabeta(plateau, profondeur, alpha, beta, max) :
         for carte in plateau.getJoueurRouge().getCartes() :
             if carte == None : 
                 continue
-            for piece in plateau.getJoueurRouge().getListePiece() :
+            for piece in plateau.getJoueurRouge().getListePions() :
                 if piece == None : 
                     continue
 

@@ -154,7 +154,7 @@ def partieIaAlphabeta() :
             cartePlateau = joueur1(joueurRouge, plateau)
 
         if tour%2 == 0 :
-            cartePlateau = joueurIaAlphabeta(plateau,joueurBleu,1)
+            cartePlateau = joueurIaAlphabeta(plateau,joueurBleu,4)
 
         #on check si ya un coup gagnant si oui on arrete le jeu sinon tour suivant
         tour+=1
