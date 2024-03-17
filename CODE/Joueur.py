@@ -41,6 +41,12 @@ class Joueur :
         """
         self.pions.append(pion)
 
+    def getCouleur(self):
+        """
+        Retourne la couleur du joueur
+        """
+        return self.couleur
+
     def getScore(self):
         """
         Retourne le score du joueur

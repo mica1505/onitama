@@ -83,8 +83,8 @@ class Mouvement :
         for p in pions :
             for coup in coups :
                 if Mouvement.pionAutorise(plateau, p, coup) :
-                    if p.getPos() not in pions_joue :
-                        pions_joue.append(p.getPos())
+                    if p not in pions_joue :
+                        pions_joue.append(p)
 
         return pions_joue
         
@@ -92,6 +92,7 @@ class Mouvement :
         """
         Deplace le pion en fonction du coup choisi
         """
+        print("deplacer piece ----------------------------------------",piece)
         if plateau.getGrille()[coup[0]][coup[1]] == Mouvement.senseiAdverse(piece):
             if Mouvement.senseiAdverse(piece) == "B":
                 plateau.captureSenseiBleu()

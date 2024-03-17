@@ -1,3 +1,4 @@
+from Ia import meilleur_coup_alpha_beta
 from Pioche import Pioche
 from Joueur import Joueur
 from Plateau import Plateau
@@ -17,17 +18,20 @@ def joueur1(joueurRouge, plateau) :
     carte=joueurRouge.getCartes()[choixCarte-1]
 
     print("pions : ")
-    pions = Mouvement.listePionsAutorises(plateau,joueurRouge.getListePions(),carte.getMouvs()) 
-    print(pions)
+    pions = Mouvement.listePionsAutorises(plateau,joueurRouge.getListePions(),carte.getMouvs())
+    listePions = []
+    for i in range (0,len(pions)-1):
+        listePions.append(pions[i].getPos())
+    print(listePions)
     i=0
-    while i<1 or i>len(pions) :
+    while i<1 or i>len(pions)-1 :
         if len(pions) > 1 :
-            print("Choissisez une piece entre 1 et " + str(len(pions)))
+            print("Choissisez une piece entre 1 et " + str(len(pions)-1))
         else :
             print("Choissisez le pion 1.")
         i = int(input("Entrer le numéro de la piece : "))
 
-    choixPion = joueurRouge.getListePions()[i-1]
+    choixPion = pions[i-1]
 
     print("Choisir le deplacement a effectuer.")
     listeCoups=Mouvement.listeCoupsPossibles(plateau,carte.getMouvs(),choixPion)
@@ -55,16 +59,19 @@ def joueur2(joueurBleu, plateau) :
 
     print("pions : ")
     pions = Mouvement.listePionsAutorises(plateau,joueurBleu.getListePions(),carte.getMouvs()) 
-    print(pions)
+    listePions = []
+    for i in range (0,len(pions)-1):
+        listePions.append(pions[i].getPos())
+    print(listePions)
 
     i = 0
     while i<1 or i>len(pions) :
         if len(pions) > 1 :
-            print("Choissisez une piece entre 1 et " + str(len(pions)))
+            print("Choissisez une piece entre 1 et " + str(len(pions)-1))
         else :
             print("Choissisez le pion 1.")
         i = int(input("Entrer le numéro de la piece : "))
-    choixPion = joueurBleu.getListePions()[i-1]
+    choixPion = pions[i-1]
 
     print("Choisir le deplacement a effectuer.")
     listeCoups=Mouvement.listeCoupsPossibles(plateau,carte.getMouvs(),choixPion)
@@ -80,7 +87,19 @@ def joueur2(joueurBleu, plateau) :
     Mouvement.deplacer(plateau,choixPion,listeCoups[j-1])
     return plateau.echange(joueurBleu, carte)
 
-
+def joueurIaAlphabeta(plateau,joueurBleu, profondeur) :
+    print("Tour du joueur BLEU.")
+    print("Cartes : \n" + "1. " + str(joueurBleu.getCartes()[0]) + "\n2. " + str(joueurBleu.getCartes()[1]))
+    meilleurCoup = meilleur_coup_alpha_beta(plateau,profondeur, False)
+    #meilleurCoup = piece,carte,move
+    pion = meilleurCoup[0]
+    carte = meilleurCoup[1]
+    coup = meilleurCoup[2]
+    
+    print("main--------------------------------",str(carte))
+    print("pion pos : ",pion.getPos())
+    Mouvement.deplacer(plateau,pion,coup)
+    return plateau.echange(joueurBleu, carte)
 
 def partie() :
     pioche = Pioche()
@@ -111,4 +130,36 @@ def partie() :
         if plateau.gameOver() :
             gameOn = False
 
-partie()
+# partie()
+
+def partieIaAlphabeta() :
+    pioche = Pioche()
+    cartes = pioche.melange()
+    joueurRouge = Joueur(cartes[:2],"Rouge",None,None)
+    joueurBleu = Joueur(cartes[2:4],"Bleu",True,2)
+    plateau = Plateau(joueurRouge,joueurBleu,cartes[-1])
+    plateau.initPlateau()
+    gameOn = True
+    cartePlateau = plateau.getCarte()
+
+    if cartePlateau.getCouleur() == "Rouge" :
+        tour = 1
+    else :
+        tour = 0
+        
+    while gameOn :
+        print(plateau)
+        #print("Carte plateau : \n" + str(cartePlateau))
+        if tour%2 == 1 :
+            cartePlateau = joueur1(joueurRouge, plateau)
+
+        if tour%2 == 0 :
+            cartePlateau = joueurIaAlphabeta(plateau,joueurBleu,1)
+
+        #on check si ya un coup gagnant si oui on arrete le jeu sinon tour suivant
+        tour+=1
+                
+        if plateau.gameOver() :
+            gameOn = False
+
+partieIaAlphabeta()

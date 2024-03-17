@@ -1,6 +1,7 @@
 from Plateau import Plateau
 from Mouvement import Mouvement
 import copy
+import random
 
 #minimax
 #alpha_beta
@@ -22,7 +23,7 @@ def eval(plateau,joueurMax):
     """
     Plateau x Joueur -> int
     """
-    if joueurMax.getColor() == "Rouge":
+    if joueurMax.getCouleur() == "Rouge":
         return plateau.getJoueurRouge().getScore() - plateau.getJoueurBleu().getScore()
     else : 
         return plateau.getJoueurBleu().getScore() - plateau.getJoueurRouge().getScore()
@@ -38,21 +39,22 @@ def minimax(plateau, profondeur, alpha, beta, max):
 def alphabeta(plateau, profondeur, alpha, beta, max) :
     if plateau.gameOver() :
         if plateau.joueurGagnant == "R" :
-            return 100 + profondeur
+            return 100 + profondeur, None
         else : 
-            return -(100 + profondeur)
+            return -(100 + profondeur), None
     
     if profondeur <= 0 : 
-        nbPieceActuelles = len(plateau.getJoueurRouge().getListePions())
-        nbPieceAdversaire = len(plateau.getJoueurBleu().getListePions())
+        # nbPieceActuelles = len(plateau.getJoueurRouge().getListePions())
+        # nbPieceAdversaire = len(plateau.getJoueurBleu().getListePions())
 
-        redSensei = plateau.getJoueurRouge().getSensei()
-        blueSensei = plateau.getJoueurBleu().getSensei()
+        # redSensei = plateau.getJoueurRouge().getSensei()
+        # blueSensei = plateau.getJoueurBleu().getSensei()
 
-        proximite_actuelle = ((redSensei.getPos()[0]-blueSensei.getPos()[0])*(redSensei.getPos()[0]-blueSensei.getPos()[0])) + ((redSensei.getPos()[1]-blueSensei.getPos()[1])*(redSensei.getPos()[1]-blueSensei.getPos()[1]))
-        proximité_adversaire = ((blueSensei.getPos()[0]-redSensei.getPos()[0])*(blueSensei.getPos()[0]-redSensei.getPos()[0])) + ((blueSensei.getPos()[1]-redSensei.getPos()[1])*(blueSensei.getPos()[1]-redSensei.getPos()[1]))
+        # proximite_actuelle = ((redSensei.getPos()[0]-blueSensei.getPos()[0])*(redSensei.getPos()[0]-blueSensei.getPos()[0])) + ((redSensei.getPos()[1]-blueSensei.getPos()[1])*(redSensei.getPos()[1]-blueSensei.getPos()[1]))
+        # proximité_adversaire = ((blueSensei.getPos()[0]-redSensei.getPos()[0])*(blueSensei.getPos()[0]-redSensei.getPos()[0])) + ((blueSensei.getPos()[1]-redSensei.getPos()[1])*(blueSensei.getPos()[1]-redSensei.getPos()[1]))
 
-        return (nbPieceActuelles-proximite_actuelle) - (nbPieceAdversaire-proximité_adversaire)
+        # return (nbPieceActuelles-proximite_actuelle) - (nbPieceAdversaire-proximité_adversaire)
+        return eval(plateau, plateau.getJoueurRouge() if max else plateau.getJoueurBleu()), None
     
     if max :
         val = float('-inf')
@@ -65,50 +67,62 @@ def alphabeta(plateau, profondeur, alpha, beta, max) :
 
                 for move in carte :
                     child = copy.deepcopy(plateau)
+                    depart = piece.getPos()
                     arrive = Mouvement.pionAutorise(child,piece,move)
 
                     if arrive == True : 
-                        coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
                         Mouvement.deplacer(child,piece,coup)
 
-                    retVal = alphabeta(child,profondeur-1,alpha,beta,False)
+                        retVal, _ = alphabeta(child,profondeur-1,alpha,beta,False)
 
-                    if val < retVal :
-                        val = retVal
-                        if alpha < val :
-                            if profondeur == plateau.getJoueurRouge().getIa() :
-                                #TO DO
-                                #ia = 
-                                carte
+                        piece.setPos(depart)
+                        meilleurCoup = [piece,carte,coup]
+                        print("meilleurCOup dans max : ",meilleurCoup)
+                        if val < retVal :
+                            val = retVal
+                            if alpha < val :
+                                if profondeur == plateau.getJoueurRouge().getIa() :
+                                    meilleurCoup = [piece,carte,coup]
 
-                            alpha = val
-                            if beta <= alpha :
-                                return val
-        return val
+                                alpha = val
+                                if beta <= alpha :
+                                    return val, meilleurCoup
+                        elif val == retVal :
+                            return val, meilleurCoup
+        return val, meilleurCoup
     else :
         val = float('-inf')
         for carte in plateau.getJoueurBleu().getCartes() :
             if carte == None : 
                 continue
-            for piece in plateau.getJoueurBleu().getListePiece() :
+            for piece in plateau.getJoueurBleu().getListePions() :
                 if piece == None : 
                     continue
-
-                for move in carte :
-                    child = Plateau(plateau)
+                
+                mouvements = carte.getMouvs()
+                for move in mouvements :
+                    child = copy.deepcopy(plateau)
+                    depart = piece.getPos()
                     arrive = Mouvement.pionAutorise(child,piece,move)
+                    coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
 
                     if arrive == True :
-                        coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
                         Mouvement.deplacer(child,piece,coup)
 
-                    retVal = alphabeta(child,profondeur-1,alpha,beta,True)
+                        retVal, _ = alphabeta(child,profondeur-1,alpha,beta,True)
 
-                    if val > retVal :
-                        val = retVal
-                        if beta > val :
-                            beta = val
-                            if beta <= alpha :
-                                return val
-        return val
+                        piece.setPos(depart)
+                        meilleurCoup = [piece,carte,coup]
+                        print("meilleurCOup dans min : ",piece.getPos(), coup)
+                        if val > retVal :
+                            val = retVal
+                            if beta > val :
+                                beta = val
+                                if beta <= alpha :
+                                    return val, meilleurCoup
+        return val, meilleurCoup
 
+def meilleur_coup_alpha_beta(plateau,profondeur, max) :
+    val, meilleurCoup = alphabeta(plateau, profondeur, float('-inf'), float('inf'), max)
+    print("meilleurCOup dans max : ",meilleurCoup)
+    return  meilleurCoup
