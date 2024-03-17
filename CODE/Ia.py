@@ -65,7 +65,8 @@ def alphabeta(plateau, profondeur, alpha, beta, max) :
                 if piece == None : 
                     continue
 
-                for move in carte :
+                mouvements = carte.getMouvs()
+                for move in mouvements :
                     child = copy.deepcopy(plateau)
                     depart = piece.getPos()
                     arrive = Mouvement.pionAutorise(child,piece,move)
