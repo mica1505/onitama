@@ -70,6 +70,7 @@ def alphabeta(plateau, profondeur, alpha, beta, max) :
                     child = copy.deepcopy(plateau)
                     depart = piece.getPos()
                     arrive = Mouvement.pionAutorise(child,piece,move)
+                    coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
 
                     if arrive == True : 
                         Mouvement.deplacer(child,piece,coup)
