@@ -41,12 +41,11 @@ def joueur1(joueurRouge, plateau) :
         j=0
         if len(listeCoups)>1 :
             while j<1 or j>len(listeCoups):
-                j = int(input("Entrer le numéro du coup que vous souhaitez jouer : "))
+                j = int(input("Entrer le numero du coup que vous souhaitez jouer : "))
         else :
             while j!=1 :
-                j=int(input("Entrer le numéro du coup 1 : "))
+                j=int(input("Entrer le numero du coup 1 : "))
         Mouvement.deplacer(plateau,choixPion,listeCoups[j-1])
-        print(plateau.getListePions())
     return plateau.echange(joueurRouge, carte)
 
 def joueur2(joueurBleu, plateau) : 
@@ -98,14 +97,12 @@ def joueurIaAlphabeta(plateau,joueurBleu, profondeur, max) :
     else :
         meilleurCoup = meilleur_coup_alpha_beta(plateau,profondeur,plateau.getJoueurRouge(),joueurBleu)
 
-    print("main--------------------------------",meilleurCoup)
+    #print("main--------------------------------",meilleurCoup)
     #meilleurCoup = piece,carte,move
     pion = meilleurCoup[0]
     carte = meilleurCoup[1]
     coup = meilleurCoup[2]
-    
-    print("main--------------------------------",str(meilleurCoup),str(carte))
-    print("pion pos : ",pion.getPos())
+
     Mouvement.deplacer(plateau,pion,coup)
     return plateau.echange(joueurBleu, carte)
 
@@ -170,6 +167,9 @@ def partieIaAlphabeta() :
         tour+=1
                 
         if plateau.gameOver() :
+            print("--------------------------------fin de partie-----------------------------------")
+            print(plateau)
+            print("Le joueur gagnant est le joueur ",plateau.joueurGagnant(),".")
             gameOn = False
 
 partieIaAlphabeta()

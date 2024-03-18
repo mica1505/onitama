@@ -21,13 +21,11 @@ class Plateau:
         Retourne sous forme de chaine de caractere le plateau et la carte du plateau
         '''
         res = ""
-        c = 0
         for i in range(self.dim):
             res+="\n"
             for j  in range(self.dim):
                 res+= self.grille[i][j] + " "
             if i==2:
-                print(c)
                 res+='\t Carte Plateau -> ' + str(self.carte)
         return res
 
@@ -184,8 +182,8 @@ class Plateau:
         Retourne le joueur gagnant
         """
         if not(self.rs) or self.grille[0][2] == 'B' :
-            return "B"
+            return "Bleu"
         else : 
-            return "R"
+            return "Rouge"
         
     

@@ -31,7 +31,7 @@ class Mouvement :
             return  'B'
 
     def discipleAdverse(piece):
-        if Mouvement.couleurPion(piece) == "B":
+        if Mouvement.couleurPion(piece) == "b":
             return "r"
         else : 
             return "b" 
@@ -69,7 +69,9 @@ class Mouvement :
         x = pion.getPos()[0] + coup[0]
         y = pion.getPos()[1] + coup[1]
 
-        if Mouvement.positionValide((x,y)) and (plateau.getGrille()[x][y] == "." or plateau.getGrille()[x][y]==Mouvement.discipleAdverse(pion) and plateau.getGrille()[x][y]==Mouvement.senseiAdverse(pion)) :
+        if Mouvement.positionValide((x,y)) and plateau.getGrille()[x][y] == "." and (plateau.getGrille()[x][y]!=Mouvement.couleurPion(pion) or plateau.getGrille()[x][y]!=Mouvement.couleurSensei(pion)) : #Si la case est vide
+            return True
+        elif Mouvement.positionValide((x,y)) and plateau.getGrille()[x][y] != "." and (plateau.getGrille()[x][y]==Mouvement.discipleAdverse(pion) or plateau.getGrille()[x][y]==Mouvement.senseiAdverse(pion)) : #Si la case est occupe par une piece adverse
             return True
         else : 
             return False
