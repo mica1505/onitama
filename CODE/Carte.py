@@ -19,6 +19,10 @@ class Carte:
             mouvs += str(m) 
         return self.nom + '('+self.couleur+')'+' : ' + mouvs
     
+    def getNom(self):
+        "Retourne le nom de la carte"
+        return self.nom
+    
     def getCouleur(self):
         """
         Retourne la couleur de la carte
@@ -30,3 +34,6 @@ class Carte:
         Retourne les mouvements de la carte
         """
         return self.mouvements
+    
+    def __eq__(self, autre):
+        return self.nom == autre.nom

@@ -89,13 +89,13 @@ def joueur2(joueurBleu, plateau) :
         Mouvement.deplacer(plateau,choixPion,listeCoups[j-1])
     return plateau.echange(joueurBleu, carte)
 
-def joueurIaAlphabeta(plateau,joueurBleu, profondeur, max) :
+def joueurIaAlphabeta(plateau,profondeur,joueurBleu, joueurRouge, max) :
     print("Tour du joueur BLEU.")
     print("Cartes : \n" + "1. " + str(joueurBleu.getCartes()[0]) + "\n2. " + str(joueurBleu.getCartes()[1]))
     if max :
-        meilleurCoup = meilleur_coup_alpha_beta(plateau,profondeur,joueurBleu, joueurBleu)
+        meilleurCoup = meilleur_coup_alpha_beta(plateau,profondeur,joueurBleu,joueurRouge, joueurBleu, True)
     else :
-        meilleurCoup = meilleur_coup_alpha_beta(plateau,profondeur,plateau.getJoueurRouge(),joueurBleu)
+        meilleurCoup = meilleur_coup_alpha_beta(plateau,profondeur,plateau.getJoueurRouge(),joueurBleu, joueurBleu, False)
 
     #print("main--------------------------------",meilleurCoup)
     #meilleurCoup = piece,carte,move
@@ -142,6 +142,7 @@ def partieIaAlphabeta() :
     cartes = pioche.melange()
     joueurRouge = Joueur(cartes[:2],"Rouge",False,None)
     joueurBleu = Joueur(cartes[2:4],"Bleu",True,4)
+    profondeur = 3
     plateau = Plateau(joueurRouge,joueurBleu,cartes[-1])
     plateau.initPlateau()
     gameOn = True
@@ -161,7 +162,7 @@ def partieIaAlphabeta() :
             cartePlateau = joueur1(joueurRouge, plateau)
 
         if tour%2 == 0 :
-            cartePlateau = joueurIaAlphabeta(plateau,joueurBleu, 1, max)
+            cartePlateau = joueurIaAlphabeta(plateau,profondeur,joueurBleu,joueurRouge,max)
 
         #on check si ya un coup gagnant si oui on arrete le jeu sinon tour suivant
         tour+=1

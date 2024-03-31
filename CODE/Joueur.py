@@ -23,11 +23,15 @@ class Joueur :
         """
         self.cartes.append(carte)
 
-    def removeCarte(self, carte) :
+    def removeCarte(self, carteSupp) :
         """
         Supprime une carte de la liste de cartes du joueur
         """
-        self.cartes.remove(carte)
+        for carte in self.cartes :
+            if carte == carteSupp:
+                print("--------------------",carte.getNom())
+                self.cartes.remove(carte)
+                break
 
     def getListePions(self) :
         """

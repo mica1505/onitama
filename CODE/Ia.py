@@ -28,7 +28,7 @@ def eval(plateau,joueurMax):
     else : 
         return plateau.getJoueurBleu().getScore() - plateau.getJoueurRouge().getScore()
     
-def minimax(plateau, profondeur, alpha, beta, joueurMax, joueurActif, listeMeilleursCoups):
+def minimax(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, listeMeilleursCoups, boolMax):
     """
     
     """
@@ -66,50 +66,82 @@ def minimax(plateau, profondeur, alpha, beta, joueurMax, joueurActif, listeMeill
         return eval(plateau, joueurMax), listeMeilleursCoups
     
     #meilleurCoup = None
-    listeCartes = joueurActif.getCartes()
-    listePions = joueurActif.getListePions()
 
-    for carte in listeCartes :
-        print("carte : ",str(carte))
-        for piece in listePions :
-            print("carte : ",str(carte))
-            mouvements = carte.getMouvs()
-            for move in mouvements :
-                child = copy.deepcopy(plateau)
-                player = copy.deepcopy(joueurActif)
-                print("cartes : ",player.getCartes())
-                depart = piece.getPos()
-                arrive = Mouvement.pionAutorise(child,piece,move)
-                coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
+    if boolMax :
+        bestValue = -float('inf')
+        listeCartes = joueurMax.getCartes()
+        listePions = joueurMax.getListePions()
+        for carte in listeCartes :
+            for piece in listePions :
+                mouvements = carte.getMouvs()
+                for move in mouvements :
+                    child = copy.deepcopy(plateau)
+                    player = copy.deepcopy(joueurMax)
+                    depart = piece.getPos()
+                    arrive = Mouvement.pionAutorise(child,piece,move)
+                    coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
+ 
+                    if arrive == True : 
+                        Mouvement.deplacer(child,piece,coup)
+                        child.echange(player,carte)
+                        print("La carte a ete supprime avec succes")
+                        MeilleursCoups = [piece,carte,coup]
+                        
+                        retVal, listeMeilleursCoups = minimax(child,profondeur-1,alpha,beta,joueurMax, joueurMin, joueurIA, listeMeilleursCoups, False)
+                        piece.setPos(depart)
 
-                if arrive == True : 
-                    Mouvement.deplacer(child,piece,coup)
-                    
-                    # if child.gameOver() and child.joueurGagnant() == joueurMax :
-                    #     print("finnnnn2")
-                    #     return float('inf'), [piece,carte,coup]
-                    # elif child.gameOver() and child.joueurGagnant() != joueurMax:
-                    #     print("finnnnn6")
-                    #     return float('-inf'), [piece,carte,coup]
+                        if retVal > bestValue :
+                            listeMeilleursCoups = MeilleursCoups
+                            bestValue = retVal
+                        
+                            # if alpha < retVal :
+                            #     alpha = max(retVal,alpha)
+                            #     listeMeilleursCoups = MeilleursCoups
 
+                        print("alpha : ",alpha," beta : ",beta," retVal :",retVal,"coup :",listeMeilleursCoups)
 
-                    retVal, listeMeilleursCoups = minimax(child,profondeur-1,alpha,beta,joueurMax, joueurActif, listeMeilleursCoups)
-                    piece.setPos(depart)
-                    print("alpha : ",alpha," beta : ",beta," retVal :",retVal,"coup :",listeMeilleursCoups)
-                    
-                    if joueurActif == joueurMax and retVal > alpha :
-                        alpha = retVal
-                        listeMeilleursCoups = [piece,carte,coup]
-                    elif joueurActif != joueurMax and retVal < beta :
-                        beta = retVal
-                        listeMeilleursCoups = [piece,carte,coup]
-                    
-    if joueurActif == joueurMax :
-        print("finnnnn4")
-        return alpha, listeMeilleursCoups
-    else : 
+        return bestValue, listeMeilleursCoups
+                        
+    
+    else :
+        bestValue = float('inf')
+        listeCartes = joueurMin.getCartes()
+        listePions = joueurMin.getListePions()
+        for carte in listeCartes :
+            for piece in listePions :
+                mouvements = carte.getMouvs()
+                for move in mouvements :
+                    child = copy.deepcopy(plateau)
+                    player = copy.deepcopy(joueurMin)
+                    depart = piece.getPos()
+                    arrive = Mouvement.pionAutorise(child,piece,move)
+                    coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
+
+                    if arrive == True : 
+                        Mouvement.deplacer(child,piece,coup)
+                        child.echange(player,carte)
+                        print("La carte a ete supprime avec succes")
+                        MeilleursCoups = [piece,carte,coup]
+ 
+                        retVal, listeMeilleursCoups = minimax(child,profondeur-1,alpha,beta,joueurMax, joueurMin, joueurIA, listeMeilleursCoups, True)
+                        piece.setPos(depart)
+                        if bestValue > retVal :
+                            bestValue = retVal
+                            listeMeilleursCoups = MeilleursCoups
+                        
+                        print("alpha : ",alpha," beta : ",beta," retVal :",retVal,"coup :",listeMeilleursCoups)
+                        
+
         print("finnnnn5")
-        return beta, listeMeilleursCoups
+        return bestValue, listeMeilleursCoups
+                        
+                    
+    # if joueurActif == joueurMax :
+    #     print("finnnnn4")
+    #     return alpha, listeMeilleursCoups
+    # else : 
+    #     print("finnnnn5")
+    #     return beta, listeMeilleursCoups
     
 #a finir et test
 def alphabeta(plateau, profondeur, alpha, beta, joueurMax, joueurActif) :
@@ -209,19 +241,21 @@ def alphabeta(plateau, profondeur, alpha, beta, joueurMax, joueurActif) :
                 print("alpha : ",alpha," beta : ",beta," retVal :",retVal)
         return val, listeMeilleursCoups#, meilleurCoup
 
-def meilleur_coup_minimax(plateau,profondeur, joueurMax, joueurMin) :
-    val, meilleurCoup = minimax(plateau, profondeur, float('-inf'), float('inf'), joueurMax, joueurMin, [])
+def meilleur_coup_minimax(plateau,profondeur, joueurMax, joueurMin, joueurActif, boolIA) :
+    val, meilleurCoup = minimax(plateau, profondeur, float('-inf'), float('inf'), joueurMax, joueurMin, joueurActif, [], boolIA)
     # print("alphabetaBis(plateau, profondeur, float('-inf'), float('inf'), joueurMax, joueurMin : ",alphabetaBis(plateau, profondeur, float('-inf'), float('inf'), joueurMax, joueurMin))
     # print("minimax(plateau, profondeur, float('-inf'), float('inf'), joueurMax, joueurMin, [])", val, meilleurCoup)
-    print("meilleurCOup dans max : ",meilleurCoup)
+    print("meilleurCoup : ",meilleurCoup)
+    print("couleur pion : ", meilleurCoup[0].getCouleur(), " carte : ", str(meilleurCoup[1]))
     #choix = random.randint(0,len(meilleurCoup))
     return meilleurCoup#[choix]
 
-def meilleur_coup_alpha_beta(plateau,profondeur, joueurMax, joueurMin) :
-    val, meilleurCoup = alphabetaBis(plateau, profondeur, float('-inf'), float('inf'), joueurMax, joueurMin, [])
+def meilleur_coup_alpha_beta(plateau,profondeur, joueurMax, joueurMin, joueurActif, boolIA) :
+    val, meilleurCoup = minimax(plateau, profondeur, float('-inf'), float('inf'), joueurMax, joueurMin, joueurActif, [], boolIA)
     # print("alphabetaBis(plateau, profondeur, float('-inf'), float('inf'), joueurMax, joueurMin : ",alphabetaBis(plateau, profondeur, float('-inf'), float('inf'), joueurMax, joueurMin))
     # print("minimax(plateau, profondeur, float('-inf'), float('inf'), joueurMax, joueurMin, [])", val, meilleurCoup)
-    print("meilleurCOup dans max : ",meilleurCoup)
+    print("meilleurCoup : ",meilleurCoup)
+    print("couleur pion : ", meilleurCoup[0].getCouleur(), " carte : ", str(meilleurCoup[1]))
     #choix = random.randint(0,len(meilleurCoup))
     return meilleurCoup#[choix]
 
