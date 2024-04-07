@@ -1,4 +1,4 @@
-from Ia import meilleur_coup_alpha_beta
+from Ia import meilleur_coup_alpha_beta, meilleur_coup_minimax, meilleur_coup_glouton
 from Pioche import Pioche
 from Joueur import Joueur
 from Plateau import Plateau
@@ -10,7 +10,7 @@ from Mouvement import Mouvement
 
 def joueur1(joueurRouge, plateau) :
     print("Tour du joueur ROUGE.")
-    print("Cartes : \n" + "1. " + str(joueurRouge.getCartes()[0]) + "\n2. " + str(joueurRouge.getCartes()[1]))
+    print("\nCartes : \n" + "1. " + str(joueurRouge.getCartes()[0]) + "\n2. " + str(joueurRouge.getCartes()[1]))
     
     choixCarte=0
     while choixCarte !=1 and choixCarte !=2 :
@@ -50,7 +50,8 @@ def joueur1(joueurRouge, plateau) :
 
 def joueur2(joueurBleu, plateau) : 
     print("Tour du joueur BLEU.")
-    print("Cartes : \n" + "1. " + str(joueurBleu.getCartes()[0]) + "\n2. " + str(joueurBleu.getCartes()[1]))
+    print("\nCartes : \n" + "1. " + str(joueurBleu.getCartes()[0]) + "\n2. " + str(joueurBleu.getCartes()[1]))
+    
     
     choixCarte=0
     while choixCarte !=1 and choixCarte !=2 :
@@ -89,16 +90,43 @@ def joueur2(joueurBleu, plateau) :
         Mouvement.deplacer(plateau,choixPion,listeCoups[j-1])
     return plateau.echange(joueurBleu, carte)
 
+def joueurIaMinimax(plateau,profondeur,joueurBleu, joueurRouge, max) :
+    print("Tour du joueur BLEU.")
+    print("Cartes : \n" + "1. " + str(joueurBleu.getCartes()[0]) + "\n2. " + str(joueurBleu.getCartes()[1]))
+
+    if max :
+        meilleurCoup = meilleur_coup_minimax(plateau,profondeur,joueurBleu,joueurRouge, joueurBleu, True)
+    else :
+        meilleurCoup = meilleur_coup_minimax(plateau,profondeur,plateau.getJoueurRouge(),joueurBleu, joueurBleu, False)
+
+    pion = meilleurCoup[0]
+    carte = meilleurCoup[1]
+    coup = meilleurCoup[2]
+
+    Mouvement.deplacer(plateau,pion,coup)
+    return plateau.echange(joueurBleu, carte)
+
 def joueurIaAlphabeta(plateau,profondeur,joueurBleu, joueurRouge, max) :
     print("Tour du joueur BLEU.")
     print("Cartes : \n" + "1. " + str(joueurBleu.getCartes()[0]) + "\n2. " + str(joueurBleu.getCartes()[1]))
+
     if max :
         meilleurCoup = meilleur_coup_alpha_beta(plateau,profondeur,joueurBleu,joueurRouge, joueurBleu, True)
     else :
         meilleurCoup = meilleur_coup_alpha_beta(plateau,profondeur,plateau.getJoueurRouge(),joueurBleu, joueurBleu, False)
 
-    #print("main--------------------------------",meilleurCoup)
-    #meilleurCoup = piece,carte,move
+    pion = meilleurCoup[0]
+    carte = meilleurCoup[1]
+    coup = meilleurCoup[2]
+
+    Mouvement.deplacer(plateau,pion,coup)
+    return plateau.echange(joueurBleu, carte)
+
+def joueurIaGlouton(plateau,joueurBleu) :
+    print("Tour du joueur BLEU.")
+    print("Cartes : \n" + "1. " + str(joueurBleu.getCartes()[0]) + "\n2. " + str(joueurBleu.getCartes()[1]))
+    meilleurCoup = meilleur_coup_glouton(plateau,joueurBleu)
+
     pion = meilleurCoup[0]
     carte = meilleurCoup[1]
     coup = meilleurCoup[2]
@@ -124,18 +152,61 @@ def partie() :
         print(plateau)
         #print("Carte plateau : \n" + str(cartePlateau))
         if tour%2 == 1 :
+            print("Cartes du joueur adverse (Bleu) : \n" + "1. " + str(plateau.getJoueurBleu().getCartes()[0]) + "\n2. " + str(plateau.getJoueurBleu().getCartes()[1]))
             cartePlateau = joueur1(joueurRouge, plateau)
 
         if tour%2 == 0 :
+            print("Cartes du joueur adverse (Rouge) : \n" + "1. " + str(plateau.getJoueurRouge().getCartes()[0]) + "\n2. " + str(plateau.getJoueurRouge().getCartes()[1]))
             cartePlateau = joueur2(joueurBleu, plateau)
 
         #on check si ya un coup gagnant si oui on arrete le jeu sinon tour suivant
         tour+=1
                 
         if plateau.gameOver() :
+            print("--------------------------------fin de partie-----------------------------------")
+            print(plateau)
+            print("Le joueur gagnant est le joueur ",plateau.joueurGagnant()+".")
             gameOn = False
 
 # partie()
+
+def partieIaMinimax() :
+    pioche = Pioche()
+    cartes = pioche.melange()
+    joueurRouge = Joueur(cartes[:2],"Rouge",False,None)
+    joueurBleu = Joueur(cartes[2:4],"Bleu",True,4)
+    profondeur = 3
+    plateau = Plateau(joueurRouge,joueurBleu,cartes[-1])
+    plateau.initPlateau()
+    gameOn = True
+    cartePlateau = plateau.getCarte()
+    max = False 
+
+    if cartePlateau.getCouleur() == "Rouge" :
+        tour = 1
+    else :
+        tour = 0
+        max = True
+        
+    while gameOn :
+        print(plateau)
+        #print("Carte plateau : \n" + str(cartePlateau))
+        if tour%2 == 1 :
+            print("Cartes du joueur adverse (Bleu) : \n" + "1. " + str(plateau.getJoueurBleu().getCartes()[0]) + "\n2. " + str(plateau.getJoueurBleu().getCartes()[1]))
+            cartePlateau = joueur1(joueurRouge, plateau)
+
+        if tour%2 == 0 :
+            print("Cartes du joueur adverse (Rouge) : \n" + "1. " + str(plateau.getJoueurRouge().getCartes()[0]) + "\n2. " + str(plateau.getJoueurRouge().getCartes()[1]))
+            cartePlateau = joueurIaMinimax(plateau,profondeur,joueurBleu,joueurRouge,max)
+
+        #on check si ya un coup gagnant si oui on arrete le jeu sinon tour suivant
+        tour+=1
+                
+        if plateau.gameOver() :
+            print("--------------------------------fin de partie-----------------------------------")
+            print(plateau)
+            print("Le joueur gagnant est le joueur ",plateau.joueurGagnant()+".")
+            gameOn = False
 
 def partieIaAlphabeta() :
     pioche = Pioche()
@@ -159,9 +230,11 @@ def partieIaAlphabeta() :
         print(plateau)
         #print("Carte plateau : \n" + str(cartePlateau))
         if tour%2 == 1 :
+            print("Cartes du joueur adverse (Bleu) : \n" + "1. " + str(plateau.getJoueurBleu().getCartes()[0]) + "\n2. " + str(plateau.getJoueurBleu().getCartes()[1]))
             cartePlateau = joueur1(joueurRouge, plateau)
 
         if tour%2 == 0 :
+            print("Cartes du joueur adverse (Rouge) : \n" + "1. " + str(plateau.getJoueurRouge().getCartes()[0]) + "\n2. " + str(plateau.getJoueurRouge().getCartes()[1]))
             cartePlateau = joueurIaAlphabeta(plateau,profondeur,joueurBleu,joueurRouge,max)
 
         #on check si ya un coup gagnant si oui on arrete le jeu sinon tour suivant
@@ -170,7 +243,43 @@ def partieIaAlphabeta() :
         if plateau.gameOver() :
             print("--------------------------------fin de partie-----------------------------------")
             print(plateau)
-            print("Le joueur gagnant est le joueur ",plateau.joueurGagnant(),".")
+            print("Le joueur gagnant est le joueur ",plateau.joueurGagnant()+".")
+            gameOn = False
+
+def partieIaGlouton() :
+    pioche = Pioche()
+    cartes = pioche.melange()
+    joueurRouge = Joueur(cartes[:2],"Rouge",False,None)
+    joueurBleu = Joueur(cartes[2:4],"Bleu",True,4)
+    plateau = Plateau(joueurRouge,joueurBleu,cartes[-1])
+    plateau.initPlateau()
+    gameOn = True
+    cartePlateau = plateau.getCarte()
+
+    if cartePlateau.getCouleur() == "Rouge" :
+        tour = 1
+    else :
+        tour = 0
+        max = True
+        
+    while gameOn :
+        print(plateau)
+        #print("Carte plateau : \n" + str(cartePlateau))
+        if tour%2 == 1 :
+            print("Cartes du joueur adverse (Bleu) : \n" + "1. " + str(plateau.getJoueurBleu().getCartes()[0]) + "\n2. " + str(plateau.getJoueurBleu().getCartes()[1]))
+            cartePlateau = joueur1(joueurRouge, plateau)
+
+        if tour%2 == 0 :
+            print("Cartes du joueur adverse (Rouge) : \n" + "1. " + str(plateau.getJoueurRouge().getCartes()[0]) + "\n2. " + str(plateau.getJoueurRouge().getCartes()[1]))
+            cartePlateau = joueurIaGlouton(plateau, joueurBleu)
+
+        #on check si ya un coup gagnant si oui on arrete le jeu sinon tour suivant
+        tour+=1
+                
+        if plateau.gameOver() :
+            print("--------------------------------fin de partie-----------------------------------")
+            print(plateau)
+            print("Le joueur gagnant est le joueur",plateau.joueurGagnant()+".")
             gameOn = False
 
 partieIaAlphabeta()

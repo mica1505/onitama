@@ -149,8 +149,6 @@ class Plateau:
         '''
         Retourne True si une des conditions de victoire a ete realisee sinon False
         '''
-        print("ruisseau",self.voieRuisseau())
-        print("pierre",self.voiePierre())
         if not(self.voiePierre()) or self.voieRuisseau() :
             return True
         else : 

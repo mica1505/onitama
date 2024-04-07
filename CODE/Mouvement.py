@@ -94,7 +94,6 @@ class Mouvement :
         """
         Deplace le pion en fonction du coup choisi
         """
-        print("deplacer piece ----------------------------------------",piece)
         if plateau.getGrille()[coup[0]][coup[1]] == Mouvement.senseiAdverse(piece):
             if Mouvement.senseiAdverse(piece) == "B":
                 plateau.captureSenseiBleu()
@@ -109,4 +108,3 @@ class Mouvement :
         plateau.getGrille()[coup[0]][coup[1]] = symbole #change le symbole sur la case a deplace
         piece.setPos(coup) #deplace le pion sur la case
         plateau.getGrille()[temp[0]][temp[1]] = "." #change la case precedente du pion en case vide
-

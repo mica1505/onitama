@@ -29,7 +29,6 @@ class Joueur :
         """
         for carte in self.cartes :
             if carte == carteSupp:
-                print("--------------------",carte.getNom())
                 self.cartes.remove(carte)
                 break
 
