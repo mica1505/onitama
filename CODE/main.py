@@ -9,6 +9,9 @@ from Mouvement import Mouvement
 # jeu = int(input())
 
 def joueur1(joueurRouge, plateau) :
+    """
+    joueur humain 1
+    """
     print("Tour du joueur ROUGE.")
     print("\nCartes : \n" + "1. " + str(joueurRouge.getCartes()[0]) + "\n2. " + str(joueurRouge.getCartes()[1]))
     
@@ -49,6 +52,9 @@ def joueur1(joueurRouge, plateau) :
     return plateau.echange(joueurRouge, carte)
 
 def joueur2(joueurBleu, plateau) : 
+    """
+    joueur humain 2
+    """
     print("Tour du joueur BLEU.")
     print("\nCartes : \n" + "1. " + str(joueurBleu.getCartes()[0]) + "\n2. " + str(joueurBleu.getCartes()[1]))
     
@@ -90,6 +96,9 @@ def joueur2(joueurBleu, plateau) :
     return plateau.echange(joueurBleu, carte)
 
 def joueurIaMinimax(plateau,profondeur,joueurBleu, joueurRouge, max) :
+    """
+    joueur ia minimax
+    """
     print("Tour du joueur BLEU.")
     print("Cartes : \n" + "1. " + str(joueurBleu.getCartes()[0]) + "\n2. " + str(joueurBleu.getCartes()[1]))
 
@@ -106,6 +115,9 @@ def joueurIaMinimax(plateau,profondeur,joueurBleu, joueurRouge, max) :
     return plateau.echange(joueurBleu, carte)
 
 def joueurIaAlphabeta(plateau,profondeur,joueurBleu, joueurRouge, max) :
+    """
+    joueur ia alphabeta
+    """
     print("Tour du joueur BLEU.")
     print("Cartes : \n" + "1. " + str(joueurBleu.getCartes()[0]) + "\n2. " + str(joueurBleu.getCartes()[1]))
 
@@ -122,6 +134,9 @@ def joueurIaAlphabeta(plateau,profondeur,joueurBleu, joueurRouge, max) :
     return plateau.echange(joueurBleu, carte)
 
 def joueurIaGlouton(plateau,joueurBleu) :
+    """
+    joueur ia glouton
+    """
     print("Tour du joueur BLEU.")
     print("Cartes : \n" + "1. " + str(joueurBleu.getCartes()[0]) + "\n2. " + str(joueurBleu.getCartes()[1]))
     meilleurCoup = meilleur_coup_glouton(plateau,joueurBleu)
@@ -134,6 +149,9 @@ def joueurIaGlouton(plateau,joueurBleu) :
     return plateau.echange(joueurBleu, carte)
 
 def partieHumain() :
+    """
+    partie avec 2 joueur humains
+    """
     pioche = Pioche()
     cartes = pioche.melange()
     joueurRouge = Joueur(cartes[:2],"Rouge",None,None)
@@ -167,6 +185,9 @@ def partieHumain() :
             gameOn = False
 
 def partieIaMinimax() :
+    """
+    partie avec une ia minimax
+    """
     pioche = Pioche()
     cartes = pioche.melange()
     joueurRouge = Joueur(cartes[:2],"Rouge",False,None)
@@ -204,6 +225,9 @@ def partieIaMinimax() :
             gameOn = False
 
 def partieIaAlphabeta() :
+    """
+    partie avec une ia alphabeta
+    """
     pioche = Pioche()
     cartes = pioche.melange()
     joueurRouge = Joueur(cartes[:2],"Rouge",False,None)
@@ -241,6 +265,9 @@ def partieIaAlphabeta() :
             gameOn = False
 
 def partieIaGlouton() :
+    """
+    partie avec une ia glouton
+    """
     pioche = Pioche()
     cartes = pioche.melange()
     joueurRouge = Joueur(cartes[:2],"Rouge",False,None)
