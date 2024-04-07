@@ -166,13 +166,14 @@ def partieHumain() :
         tour = 0
         
     while gameOn :
-        print(plateau)
         if tour%2 == 1 :
-            print("Cartes du joueur adverse (Bleu) : \n" + "1. " + str(plateau.getJoueurBleu().getCartes()[0]) + "\n2. " + str(plateau.getJoueurBleu().getCartes()[1]))
+            print("\nCartes du joueur adverse (Bleu) : \n" + "1. " + str(plateau.getJoueurBleu().getCartes()[0]) + "\n2. " + str(plateau.getJoueurBleu().getCartes()[1]))
+            print(plateau)
             cartePlateau = joueur1(joueurRouge, plateau)
 
         if tour%2 == 0 :
-            print("Cartes du joueur adverse (Rouge) : \n" + "1. " + str(plateau.getJoueurRouge().getCartes()[0]) + "\n2. " + str(plateau.getJoueurRouge().getCartes()[1]))
+            print("\nCartes du joueur adverse (Rouge) : \n" + "1. " + str(plateau.getJoueurRouge().getCartes()[0]) + "\n2. " + str(plateau.getJoueurRouge().getCartes()[1]))
+            print(plateau)
             cartePlateau = joueur2(joueurBleu, plateau)
 
         #on check si ya un coup gagnant si oui on arrete le jeu sinon tour suivant
@@ -206,13 +207,14 @@ def partieIaMinimax() :
         max = True
         
     while gameOn :
-        print(plateau)
         if tour%2 == 1 :
-            print("Cartes du joueur adverse (Bleu) : \n" + "1. " + str(plateau.getJoueurBleu().getCartes()[0]) + "\n2. " + str(plateau.getJoueurBleu().getCartes()[1]))
+            print("\nCartes du joueur adverse (Bleu) : \n" + "1. " + str(plateau.getJoueurBleu().getCartes()[0]) + "\n2. " + str(plateau.getJoueurBleu().getCartes()[1]))
+            print(plateau)
             cartePlateau = joueur1(joueurRouge, plateau)
 
         if tour%2 == 0 :
-            print("Cartes du joueur adverse (Rouge) : \n" + "1. " + str(plateau.getJoueurRouge().getCartes()[0]) + "\n2. " + str(plateau.getJoueurRouge().getCartes()[1]))
+            print("\nCartes du joueur adverse (Rouge) : \n" + "1. " + str(plateau.getJoueurRouge().getCartes()[0]) + "\n2. " + str(plateau.getJoueurRouge().getCartes()[1]))
+            print(plateau)
             cartePlateau = joueurIaMinimax(plateau,profondeur,joueurBleu,joueurRouge,max)
 
         #on check si ya un coup gagnant si oui on arrete le jeu sinon tour suivant
@@ -246,13 +248,14 @@ def partieIaAlphabeta() :
         max = True
         
     while gameOn :
-        print(plateau)
         if tour%2 == 1 :
-            print("Cartes du joueur adverse (Bleu) : \n" + "1. " + str(plateau.getJoueurBleu().getCartes()[0]) + "\n2. " + str(plateau.getJoueurBleu().getCartes()[1]))
+            print("\nCartes du joueur adverse (Bleu) : \n" + "1. " + str(plateau.getJoueurBleu().getCartes()[0]) + "\n2. " + str(plateau.getJoueurBleu().getCartes()[1]))
+            print(plateau)
             cartePlateau = joueur1(joueurRouge, plateau)
 
         if tour%2 == 0 :
-            print("Cartes du joueur adverse (Rouge) : \n" + "1. " + str(plateau.getJoueurRouge().getCartes()[0]) + "\n2. " + str(plateau.getJoueurRouge().getCartes()[1]))
+            print("\nCartes du joueur adverse (Rouge) : \n" + "1. " + str(plateau.getJoueurRouge().getCartes()[0]) + "\n2. " + str(plateau.getJoueurRouge().getCartes()[1]))
+            print(plateau)
             cartePlateau = joueurIaAlphabeta(plateau,profondeur,joueurBleu,joueurRouge,max)
 
         #on check si ya un coup gagnant si oui on arrete le jeu sinon tour suivant
@@ -283,13 +286,14 @@ def partieIaGlouton() :
         tour = 0
         
     while gameOn :
-        print(plateau)
         if tour%2 == 1 :
-            print("Cartes du joueur adverse (Bleu) : \n" + "1. " + str(plateau.getJoueurBleu().getCartes()[0]) + "\n2. " + str(plateau.getJoueurBleu().getCartes()[1]))
+            print("\nCartes du joueur adverse (Bleu) : \n" + "1. " + str(plateau.getJoueurBleu().getCartes()[0]) + "\n2. " + str(plateau.getJoueurBleu().getCartes()[1]))
+            print(plateau)
             cartePlateau = joueur1(joueurRouge, plateau)
 
         if tour%2 == 0 :
-            print("Cartes du joueur adverse (Rouge) : \n" + "1. " + str(plateau.getJoueurRouge().getCartes()[0]) + "\n2. " + str(plateau.getJoueurRouge().getCartes()[1]))
+            print("\nCartes du joueur adverse (Rouge) : \n" + "1. " + str(plateau.getJoueurRouge().getCartes()[0]) + "\n2. " + str(plateau.getJoueurRouge().getCartes()[1]))
+            print(plateau)
             cartePlateau = joueurIaGlouton(plateau, joueurBleu)
 
         #on check si ya un coup gagnant si oui on arrete le jeu sinon tour suivant
