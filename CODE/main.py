@@ -52,7 +52,6 @@ def joueur2(joueurBleu, plateau) :
     print("Tour du joueur BLEU.")
     print("\nCartes : \n" + "1. " + str(joueurBleu.getCartes()[0]) + "\n2. " + str(joueurBleu.getCartes()[1]))
     
-    
     choixCarte=0
     while choixCarte !=1 and choixCarte !=2 :
         choixCarte = int(input("Choisissez la carte a jouer (1 ou 2) : "))
@@ -134,7 +133,7 @@ def joueurIaGlouton(plateau,joueurBleu) :
     Mouvement.deplacer(plateau,pion,coup)
     return plateau.echange(joueurBleu, carte)
 
-def partie() :
+def partieHumain() :
     pioche = Pioche()
     cartes = pioche.melange()
     joueurRouge = Joueur(cartes[:2],"Rouge",None,None)
@@ -150,7 +149,6 @@ def partie() :
         
     while gameOn :
         print(plateau)
-        #print("Carte plateau : \n" + str(cartePlateau))
         if tour%2 == 1 :
             print("Cartes du joueur adverse (Bleu) : \n" + "1. " + str(plateau.getJoueurBleu().getCartes()[0]) + "\n2. " + str(plateau.getJoueurBleu().getCartes()[1]))
             cartePlateau = joueur1(joueurRouge, plateau)
@@ -167,8 +165,6 @@ def partie() :
             print(plateau)
             print("Le joueur gagnant est le joueur ",plateau.joueurGagnant()+".")
             gameOn = False
-
-# partie()
 
 def partieIaMinimax() :
     pioche = Pioche()
@@ -190,7 +186,6 @@ def partieIaMinimax() :
         
     while gameOn :
         print(plateau)
-        #print("Carte plateau : \n" + str(cartePlateau))
         if tour%2 == 1 :
             print("Cartes du joueur adverse (Bleu) : \n" + "1. " + str(plateau.getJoueurBleu().getCartes()[0]) + "\n2. " + str(plateau.getJoueurBleu().getCartes()[1]))
             cartePlateau = joueur1(joueurRouge, plateau)
@@ -228,7 +223,6 @@ def partieIaAlphabeta() :
         
     while gameOn :
         print(plateau)
-        #print("Carte plateau : \n" + str(cartePlateau))
         if tour%2 == 1 :
             print("Cartes du joueur adverse (Bleu) : \n" + "1. " + str(plateau.getJoueurBleu().getCartes()[0]) + "\n2. " + str(plateau.getJoueurBleu().getCartes()[1]))
             cartePlateau = joueur1(joueurRouge, plateau)
@@ -260,11 +254,9 @@ def partieIaGlouton() :
         tour = 1
     else :
         tour = 0
-        max = True
         
     while gameOn :
         print(plateau)
-        #print("Carte plateau : \n" + str(cartePlateau))
         if tour%2 == 1 :
             print("Cartes du joueur adverse (Bleu) : \n" + "1. " + str(plateau.getJoueurBleu().getCartes()[0]) + "\n2. " + str(plateau.getJoueurBleu().getCartes()[1]))
             cartePlateau = joueur1(joueurRouge, plateau)
