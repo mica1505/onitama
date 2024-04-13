@@ -108,3 +108,27 @@ class Mouvement :
         plateau.getGrille()[coup[0]][coup[1]] = symbole #change le symbole sur la case a deplace
         piece.setPos(coup) #deplace le pion sur la case
         plateau.getGrille()[temp[0]][temp[1]] = "." #change la case precedente du pion en case vide
+
+
+def listeCoupsLegaux(plateau,joueur) :
+        '''
+        Retourne la liste des coups possibles du joueur
+        '''
+        coups = []
+        listePions = joueur.getListePions()
+        listeCartes = joueur.getCartes()
+        for carte in listeCartes :
+            for piece in listePions :
+                for deplacement in carte :
+                    if Mouvement.couleurPion(piece) == "b" or Mouvement.couleurSensei(piece) == "B" : #Verifie la couleur de la piece pour que les coordonnees des déplacements soient corrects sur les axes
+                        x = piece.getPos()[0] + deplacement[0]*(-1)
+                        y = piece.getPos()[1] + deplacement[1]
+                    else :
+                        x = piece.getPos()[0] + deplacement[0]
+                        y = piece.getPos()[1] + deplacement[1]
+
+                    if Mouvement.positionValide((x,y)) and plateau.getGrille()[x][y] == "." and (plateau.getGrille()[x][y]!=Mouvement.couleurPion(piece) or plateau.getGrille()[x][y]!=Mouvement.couleurSensei(piece)) : #Si la case est vide
+                        coups.append((piece),(x,y))
+                    elif Mouvement.positionValide((x,y)) and plateau.getGrille()[x][y] != "." and (plateau.getGrille()[x][y]==Mouvement.discipleAdverse(piece) or plateau.getGrille()[x][y]==Mouvement.senseiAdverse(piece)) : #Si la case est occupe par une piece adverse
+                        coups.append((piece),(x,y))
+        return coups
