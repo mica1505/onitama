@@ -247,7 +247,10 @@ def alphabeta(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, 
                     player = copy.deepcopy(joueurMax)
                     depart = piece.getPos()
                     arrive = Mouvement.pionAutorise(child,piece,move)
-                    coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
+                    if joueurMax.getCouleur() == "Rouge":
+                        coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
+                    else : 
+                        coup = (piece.getPos()[0] - move[0], piece.getPos()[1] + move[1])
  
                     if arrive == True : 
                         Mouvement.deplacer(child,piece,coup)
@@ -279,7 +282,10 @@ def alphabeta(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, 
                     player = copy.deepcopy(joueurMin)
                     depart = piece.getPos()
                     arrive = Mouvement.pionAutorise(child,piece,move)
-                    coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
+                    if joueurMin.getCouleur() == "Rouge":
+                        coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
+                    else : 
+                        coup = (piece.getPos()[0] - move[0], piece.getPos()[1] + move[1])
 
                     if arrive == True : 
                         Mouvement.deplacer(child,piece,coup)
@@ -316,7 +322,10 @@ def glouton(plateau, joueurIA) :
                 player = copy.deepcopy(joueurIA)
                 depart = piece.getPos()
                 arrive = Mouvement.pionAutorise(child, piece, move)
-                coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
+                if joueurIA.getCouleur() == "Rouge":
+                    coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
+                else : 
+                    coup = (piece.getPos()[0] - move[0], piece.getPos()[1] + move[1])
 
                 if arrive : 
                     Mouvement.deplacer(child, piece, coup)
@@ -330,6 +339,8 @@ def glouton(plateau, joueurIA) :
                         meilleurCoup = [piece, carte, coup]
                     
                     if child.gameOver():
+                        meilleurVal = float('inf')
+                        meilleurCoup = [piece, carte, coup]
                         return meilleurCoup
 
     return meilleurCoup
