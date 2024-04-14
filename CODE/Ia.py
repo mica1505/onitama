@@ -76,10 +76,13 @@ def protectionMaitre(plateau, joueur) :
     protection = 0
     for i in range(-1,2) :
         for j in range(-1,2) :
-            if plateau.getGrille()[maitre.getPos()[0] + i][maitre.getPos()[1] +j] == 'r' and joueur.getCouleur() == "Rouge" : 
-                protection +=1
-            elif plateau.getGrille()[maitre.getPos()[0] + i][maitre.getPos()[1] +j] == 'b' and joueur.getCouleur() == "Bleu" :
-                protection +=1
+            x = maitre.getPos()[0] + i
+            y = maitre.getPos()[1] +j
+            if 0 <= x < 5 and 0 <= y <5 :
+                if plateau.getGrille()[x][y] == 'r' and joueur.getCouleur() == "Rouge" : 
+                    protection +=1
+                elif plateau.getGrille()[maitre.getPos()[0] - i][y] == 'b' and joueur.getCouleur() == "Bleu" :
+                    protection +=1
 
     return protection
     
@@ -169,7 +172,10 @@ def minimax(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, li
                     player = copy.deepcopy(joueurMax)
                     depart = piece.getPos()
                     arrive = Mouvement.pionAutorise(child,piece,move)
-                    coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
+                    if joueurMax.getCouleur() == "Rouge":
+                        coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
+                    else : 
+                        coup = (piece.getPos()[0] - move[0], piece.getPos()[1] + move[1])
  
                     if arrive == True : 
                         Mouvement.deplacer(child,piece,coup)
@@ -197,7 +203,10 @@ def minimax(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, li
                     player = copy.deepcopy(joueurMin)
                     depart = piece.getPos()
                     arrive = Mouvement.pionAutorise(child,piece,move)
-                    coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
+                    if joueurMin.getCouleur() == "Rouge":
+                        coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
+                    else : 
+                        coup = (piece.getPos()[0] - move[0], piece.getPos()[1] + move[1])
 
                     if arrive == True : 
                         Mouvement.deplacer(child,piece,coup)
