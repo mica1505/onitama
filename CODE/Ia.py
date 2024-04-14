@@ -20,31 +20,38 @@ import random
 #assigner des heuristiques aux differents etats
 # une fonction eval
 
-def eval(plateau,joueur):
+def eval(plateau,joueur,max):
     """
     Plateau x Joueur -> int
     """
-    if joueur.getCouleur() == "Rouge":
-        return plateau.getJoueurRouge().getScore() - plateau.getJoueurBleu().getScore()
+    scoreJoueur = joueur.getScore()
+    if joueur.getCouleur == "Rouge" :
+        scoreAdverse = plateau.getJoueurBleu().getScore()
     else : 
-        return plateau.getJoueurBleu().getScore() - plateau.getJoueurRouge().getScore()
+        scoreAdverse = plateau.getJoueurRouge().getScore()
+
+    if max:
+        return scoreJoueur - scoreAdverse
+    else : 
+        return scoreAdverse - scoreJoueur
     
 def distanceMaitre(plateau, joueur) :
     """
     Evalue la distance entre le maitre du joueur et celui de l'adversaire
     """
     nbPieceActuelles = len(joueur.getListePions())
-    redSensei = plateau.getJoueurRouge().getSensei()
-    blueSensei = plateau.getJoueurBleu().getSensei()
+    redSensei = plateau.getJoueurRouge().getSensei().getPos()
+    blueSensei = plateau.getJoueurBleu().getSensei().getPos()
+    print(redSensei, blueSensei)
 
     if joueur.getCouleur() == "Rouge" :
         nbPieceAdversaire = len(plateau.getJoueurBleu().getListePions())
-        proximite_actuelle = ((redSensei.getPos()[0]-blueSensei.getPos()[0])*(redSensei.getPos()[0]-blueSensei.getPos()[0])) + ((redSensei.getPos()[1]-blueSensei.getPos()[1])*(redSensei.getPos()[1]-blueSensei.getPos()[1]))
-        proximite_adversaire = ((blueSensei.getPos()[0]-redSensei.getPos()[0])*(blueSensei.getPos()[0]-redSensei.getPos()[0])) + ((blueSensei.getPos()[1]-redSensei.getPos()[1])*(blueSensei.getPos()[1]-redSensei.getPos()[1]))
+        proximite_actuelle = ((redSensei[0]-blueSensei[0])*(redSensei[0]-blueSensei[0])) + ((redSensei[1]-blueSensei[1])*(redSensei[1]-blueSensei[1]))
+        proximite_adversaire = ((blueSensei[0]-redSensei[0])*(blueSensei[0]-redSensei[0])) + ((blueSensei[1]-redSensei[1])*(blueSensei[1]-redSensei[1]))
     else :
         nbPieceAdversaire = len(plateau.getJoueurRouge().getListePions())
-        proximite_actuelle = ((blueSensei.getPos()[0]-redSensei.getPos()[0])*(blueSensei.getPos()[0]-redSensei.getPos()[0])) + ((blueSensei.getPos()[1]-redSensei.getPos()[1])*(blueSensei.getPos()[1]-redSensei.getPos()[1]))
-        proximite_adversaire = ((redSensei.getPos()[0]-blueSensei.getPos()[0])*(redSensei.getPos()[0]-blueSensei.getPos()[0])) + ((redSensei.getPos()[1]-blueSensei.getPos()[1])*(redSensei.getPos()[1]-blueSensei.getPos()[1]))
+        proximite_actuelle = ((blueSensei[0]-redSensei[0])*(blueSensei[0]-redSensei[0])) + ((blueSensei[1]-redSensei[1])*(blueSensei[1]-redSensei[1]))
+        proximite_adversaire = ((redSensei[0]-blueSensei[0])*(redSensei[0]-blueSensei[0])) + ((redSensei[1]-blueSensei[1])*(redSensei[1]-blueSensei[1]))
 
     return (nbPieceActuelles-proximite_actuelle) - (nbPieceAdversaire-proximite_adversaire)
 
@@ -72,16 +79,16 @@ def protectionMaitre(plateau, joueur) :
     """
     Evalue le niveau de protection du maitre
     """
-    maitre = joueur.getSensei()
+    maitre = joueur.getSensei().getPos()
     protection = 0
     for i in range(-1,2) :
         for j in range(-1,2) :
-            x = maitre.getPos()[0] + i
-            y = maitre.getPos()[1] +j
-            if 0 <= x < 5 and 0 <= y <5 :
+            x = maitre[0] + i
+            y = maitre[1] + j
+            if Mouvement.positionValide((x,y)) :
                 if plateau.getGrille()[x][y] == 'r' and joueur.getCouleur() == "Rouge" : 
                     protection +=1
-                elif plateau.getGrille()[maitre.getPos()[0] - i][y] == 'b' and joueur.getCouleur() == "Bleu" :
+                elif plateau.getGrille()[x][y] == 'b' and joueur.getCouleur() == "Bleu" :
                     protection +=1
 
     return protection
@@ -132,20 +139,22 @@ def controleDiagonales(plateau, joueur) :
         
     return controle
 
-def evalPosition(plateau, joueur) :
+def evalPosition(plateau, joueur, max) :
     """
     Evalue la position d'un joueur
     """
-    score = 0
-    score += distanceMaitre(plateau, joueur)
-    score += nbMouvDispo(plateau, joueur)
-    score += controleCentrePlateau(plateau, joueur)
-    score += protectionMaitre(plateau, joueur)
-    score += menaceMaitre(plateau, joueur)
-    score += mobilitePions(plateau, joueur)
-    score += controleDiagonales(plateau, joueur)
+    scoreJoueur = 0
+    #score += distanceMaitre(plateau, joueur)
+    scoreJoueur = nbMouvDispo(plateau, joueur) + controleCentrePlateau(plateau, joueur) + menaceMaitre(plateau, joueur) + mobilitePions(plateau, joueur) + controleDiagonales(plateau, joueur) #+ protectionMaitre(plateau, joueur)
+    if joueur.getCouleur() == "Rouge" : 
+        scoreAdverse = nbMouvDispo(plateau, plateau.getJoueurBleu()) + controleCentrePlateau(plateau, plateau.getJoueurBleu()) + menaceMaitre(plateau, plateau.getJoueurBleu()) + mobilitePions(plateau, plateau.getJoueurBleu()) + controleDiagonales(plateau, plateau.getJoueurBleu()) #+ protectionMaitre(plateau, plateau.getJoueurBleu())
+    else :
+        scoreAdverse = nbMouvDispo(plateau, plateau.getJoueurRouge()) + controleCentrePlateau(plateau, plateau.getJoueurRouge()) + menaceMaitre(plateau, plateau.getJoueurRouge()) + mobilitePions(plateau, plateau.getJoueurRouge()) + controleDiagonales(plateau, plateau.getJoueurRouge()) #+ protectionMaitre(plateau, plateau.getJoueurRouge())
 
-    return score
+    if max:
+        return scoreJoueur - scoreAdverse
+    else : 
+        return scoreAdverse - scoreJoueur
     
 def minimax(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, listeMeilleursCoups, boolMax):
     """
@@ -158,7 +167,7 @@ def minimax(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, li
             return -float('inf'), listeMeilleursCoups
         
     if profondeur <= 0 : 
-        return eval(plateau, joueurIA), listeMeilleursCoups
+        return eval(plateau, joueurIA,not(boolMax)), listeMeilleursCoups
 
     if boolMax :
         bestValue = -float('inf')
@@ -305,7 +314,7 @@ def alphabeta(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, 
                         
         return bestValue, listeMeilleursCoups
     
-def glouton(plateau, joueurIA) :
+def glouton(plateau, joueurIA, boolMax) :
     """
     Algorithme glouton
     """
@@ -331,7 +340,7 @@ def glouton(plateau, joueurIA) :
                     Mouvement.deplacer(child, piece, coup)
                     child.echange(player, carte)
 
-                    valeur = eval(child, joueurIA)
+                    valeur = evalPosition(child, joueurIA, boolMax)
                     piece.setPos(depart)
 
                     if valeur > meilleurVal :
@@ -360,11 +369,11 @@ def meilleur_coup_alpha_beta(plateau,profondeur, joueurMax, joueurMin, joueurIA,
     val, meilleurCoup = alphabeta(plateau, profondeur, float('-inf'), float('inf'), joueurMax, joueurMin, joueurIA, [], boolIA)
     return meilleurCoup
 
-def meilleur_coup_glouton(plateau, joueurIA) :
+def meilleur_coup_glouton(plateau, joueurIA, boolMax) :
     """
     Retourne le meilleur coup de l'algo glouton
     """
-    meilleurCoup = glouton(plateau, joueurIA)
+    meilleurCoup = glouton(plateau, joueurIA, boolMax)
     return meilleurCoup
 
 def monteCarloTreeSearch(plateau, joueurMax, joueurMin, joueurIA, profondeurMax, simulations) :

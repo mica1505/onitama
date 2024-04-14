@@ -20,14 +20,14 @@ def joueurHumain(joueur, plateau) :
     print("pions : ")
     pions = Mouvement.listePionsAutorises(plateau,joueur.getListePions(),carte.getMouvs())
     listePions = []
-    for i in range (0,len(pions)-1):
+    for i in range (0,len(pions)):
         listePions.append(pions[i].getPos())
     print(listePions)
     i=0
     if len(listePions) != 0 :
-        while i<1 or i>len(pions)-1 :
+        while i<1 or i>len(pions) :
             if len(pions) > 1 :
-                print("Choissisez une piece entre 1 et " + str(len(pions)-1))
+                print("Choissisez une piece entre 1 et " + str(len(pions)))
             else :
                 print("Choissisez le pion 1.")
             i = int(input("Entrer le numéro de la piece : "))
@@ -88,13 +88,13 @@ def joueurIaAlphabeta(plateau,profondeur,joueurIA, joueurHumain, max) :
     Mouvement.deplacer(plateau,pion,coup)
     return plateau.echange(joueurIA, carte)
 
-def joueurIaGlouton(plateau,joueurIA) :
+def joueurIaGlouton(plateau,joueurIA, max) :
     """
     joueur ia glouton
     """
     print("Tour de l'ia.")
     print("Cartes : \n" + "1. " + str(joueurIA.getCartes()[0]) + "\n2. " + str(joueurIA.getCartes()[1]))
-    meilleurCoup = meilleur_coup_glouton(plateau,joueurIA)
+    meilleurCoup = meilleur_coup_glouton(plateau,joueurIA, max)
 
     pion = meilleurCoup[0]
     carte = meilleurCoup[1]
@@ -176,6 +176,8 @@ def partieIaMinimax() :
         tour = 1
     else :
         tour = 0
+
+    if cartePlateau.getCouleur() == joueurIA.getCouleur() :
         max = True
         
     while gameOn :
@@ -232,6 +234,8 @@ def partieIaAlphabeta() :
         tour = 1
     else :
         tour = 0
+
+    if cartePlateau.getCouleur() == joueurIA.getCouleur() :
         max = True
         
     while gameOn :
@@ -271,9 +275,8 @@ def partieIaGlouton() :
     random.shuffle(couleurs)
 
     joueurH = Joueur(cartes[:2],couleurs[0],False,None)
-    joueurIA = Joueur(cartes[2:4],couleurs[1],True,4)
+    joueurIA = Joueur(cartes[2:4],couleurs[1],True,None)
 
-    profondeur = 3
     if joueurH.getCouleur() == "Rouge" :
         plateau = Plateau(joueurH,joueurIA,cartes[-1])
     else :
@@ -288,6 +291,8 @@ def partieIaGlouton() :
         tour = 1
     else :
         tour = 0
+
+    if cartePlateau.getCouleur() == joueurIA.getCouleur() :
         max = True
         
     while gameOn :
@@ -297,7 +302,7 @@ def partieIaGlouton() :
             if joueurH.getCouleur() == "Rouge" :
                 cartePlateau = joueurHumain(joueurH, plateau)
             else :
-                cartePlateau = joueurIaGlouton(plateau, joueurIA)
+                cartePlateau = joueurIaGlouton(plateau, joueurIA, max)
 
         if tour%2 == 0 :
             print("\nCartes du joueur adverse (Rouge) : \n" + "1. " + str(plateau.getJoueurRouge().getCartes()[0]) + "\n2. " + str(plateau.getJoueurRouge().getCartes()[1]))
@@ -305,7 +310,7 @@ def partieIaGlouton() :
             if joueurH.getCouleur() == "Bleu" :
                 cartePlateau = joueurHumain(joueurH, plateau)
             else :
-                cartePlateau = joueurIaGlouton(plateau, joueurIA)
+                cartePlateau = joueurIaGlouton(plateau, joueurIA, max)
 
         #on check si ya un coup gagnant si oui on arrete le jeu sinon tour suivant
         tour+=1
@@ -346,3 +351,5 @@ def menu() :
         partieIA()
     elif jeu == 3 :
         return
+    
+menu()
