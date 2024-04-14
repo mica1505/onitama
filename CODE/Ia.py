@@ -128,6 +128,21 @@ def controleDiagonales(plateau, joueur) :
             controle +=1 
         
     return controle
+
+def evalPosition(plateau, joueur) :
+    """
+    Evalue la position d'un joueur
+    """
+    score = 0
+    score += distanceMaitre(plateau, joueur)
+    score += nbMouvDispo(plateau, joueur)
+    score += controleCentrePlateau(plateau, joueur)
+    score += protectionMaitre(plateau, joueur)
+    score += menaceMaitre(plateau, joueur)
+    score += mobilitePions(plateau, joueur)
+    score += controleDiagonales(plateau, joueur)
+
+    return score
     
 def minimax(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, listeMeilleursCoups, boolMax):
     """
