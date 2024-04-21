@@ -1,15 +1,13 @@
 class Joueur :
-    def __init__(self, cartes, couleur, ia, difficulte) :
+    def __init__(self, cartes, couleur, difficulte) :
         '''
         Initialisation d'un joueur
         '''
         self.cartes : list = cartes
         self.pions=[] #on les passe depuis le plateau au lancement du jeu
         self.couleur=couleur
-        self.ia=ia
         self.score = self.somVal()
-        if ia == True :
-            self.difficulte=difficulte
+        self.difficulte=difficulte
 
     def getCartes(self) :
         """
@@ -100,9 +98,3 @@ class Joueur :
         Retourne la difficulte de l'ia
         """ 
         return self.difficulte
-    
-    def getIa(self):
-        """
-        Retourne True si le joueur est une ia
-        """
-        return self.ia

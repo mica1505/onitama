@@ -219,7 +219,7 @@ def partieIaAlphabeta() :
     joueurH = Joueur(cartes[:2],couleurs[0],False,None)
     joueurIA = Joueur(cartes[2:4],couleurs[1],True,3)
 
-    profondeur = 3
+    profondeur = 5
     if joueurH.getCouleur() == "Rouge" :
         plateau = Plateau(joueurH,joueurIA,cartes[-1])
     else :

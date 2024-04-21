@@ -4,21 +4,6 @@ from Mouvement import Mouvement
 import copy
 import random
 
-#minimax
-#alpha_beta
-#montecarl
-#glouton
-#recherche heuristiques
-
-
-#un noeud c'est le plateau les deux joueurs
-#faut enumerer toutes les differentes combinaisons de cartes
-#puis enumerer les coups possibles
-#l'etat initial c'est le plateau avec cartes ( on a plusieurs etats initiaux)
-#l'etat final soit la voieRuisseau soit voiePierre
-
-#assigner des heuristiques aux differents etats
-# une fonction eval
 
 def eval(plateau,joueur,max):
     """
@@ -242,7 +227,7 @@ def alphabeta(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, 
             return -float('inf'), listeMeilleursCoups
         
     if profondeur <= 0 : 
-        return eval(plateau, joueurIA), listeMeilleursCoups
+        return eval(plateau, joueurIA, boolMax), listeMeilleursCoups
 
     if boolMax :
         bestValue = -float('inf')
@@ -376,101 +361,3 @@ def meilleur_coup_glouton(plateau, joueurIA, boolMax) :
     meilleurCoup = glouton(plateau, joueurIA, boolMax)
     return meilleurCoup
 
-def monteCarloTreeSearch(plateau, joueurMax, joueurMin, joueurIA, profondeurMax, simulations) :
-    racine = {
-        'state' : plateau,
-        'parent' : None,
-        'children' : [],
-        'visit' : 0,
-        'wins' : 0
-    }
-
-    for i in range(simulations) :
-        #phase de selection
-        noeudSelectionne = selectionnerNoeud(racine, joueurMax, joueurMin, joueurIA)
-
-        #phase de simulation
-        resultatSimulation = simuler(noeudSelectionne['state'], joueurMax, joueurMin, joueurIA, profondeurMax)
-
-        #phase de backpropagation
-        retropropagation(noeudSelectionne, resultatSimulation)
-
-    #choisir le meilleur coup a partir du noeud racine
-    meilleurCoup = choisirMeilleurCoup(racine)
-
-    return meilleurCoup
-
-def selectionnerNoeud(noeud, joueurMax, joueurMin, joueurIA) :
-    #On parcours l'arbre en utilisant UCT (Upper Confidence Bound for Trees)
-    while not estFeuille(noeud) : 
-        noeud = choisirEnfantUct(noeud)
-
-    #Si le noeud est une feuille, on fait une expansion
-    if len(noeud['children']) == 0 : 
-        expand(noeud, joueurMax, joueurMin, joueurIA)
-    
-    #On selectionne un enfant au hasard parmi les enfants de ce noeud
-    return random.choice(noeud['children'])
-
-def estFeuille(noeud) : 
-    return len(noeud['children']) == 0
-
-def choisirEnfantUct(noeud) :
-    """
-    algorithme uct
-    """
-
-    C=1.4
-
-    #Calculer l'UCT pour chaque enfant et choisir celui avec la valeur maximale
-    meilleursEnfants = []
-
-    for enfant in noeud['children'] : 
-        if enfant['visits'] == 0 : 
-            return enfant #chosir un enfant non exploré immédiatement
-        else : 
-            uctValue = enfant['wins']/enfant['visits'] + C*math.sqrt(math.log(noeud['visits']/enfant['visits']))
-            meilleursEnfants.append((enfant, uctValue))
-
-    meilleurEnfant = max(meilleursEnfants, key=lambda x: x[1])[0]
-    return meilleurEnfant
-
-def expand(noeud, joueurMax, joueurMin, joueurIA) : 
-    etat = noeud['state']
-
-    coupsPossibles = Mouvement.listeCoupsLegaux(noeud, joueurIA)
-
-    for coup in coupsPossibles : 
-        nouvelEtat = 1#appliquer_action(etat, action)
-
-        nouveauNoeud = {
-            'state' : nouvelEtat,
-            'parent' : None,
-            'children' : [],
-            'visit' : 0,
-            'wins' : 0
-        }
-        noeud['children'].append(nouveauNoeud)
-
-def simuler(plateau, joueurMax, joueurMin, joueurIA, profondeurMax) : 
-    #Simuler un jeu a partir de l'etat du plateau jusqu'a une condition de fin
-    while not plateau.gameOver() and profondeurMax > 0 : 
-        coupsPossibles = Mouvement.listeCoupsLegaux(plateau, joueurIA)
-        #On choisit des coups aleatoires a partir de l'etat actuel du plateau
-        coupAleatoire = random.choice(coupsPossibles)
-        Mouvement.deplacer(coupAleatoire[0], coupAleatoire[1])
-        profondeurMax -= 1
-    return eval(plateau, joueurIA)
-
-def retropropagation(noeud, resultSimulation) :
-    while noeud is not None :
-        noeud['visits'] += 1
-        if resultSimulation > 0 :
-            noeud['wins'] += 1
-        #aller au noeud parent
-        noeud = noeud['parent']
-    return
-
-def choisirMeilleurCoup(racine) :
-    meilleurCoup = max(racine['children'], key=lambda enfant : enfant['visits'])
-    return #actionCorrespondante(meilleurCoup['state'], racine['state'])
