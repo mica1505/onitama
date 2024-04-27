@@ -143,7 +143,7 @@ def evalPosition(plateau, joueur, max) :
     """
     scoreJoueur = 0
     #scoreJoueur += distanceMaitre(plateau, joueur)
-    scoreJoueur = nbMouvDispo(plateau, joueur) + controleCentrePlateau(plateau, joueur) + menaceMaitre(plateau, joueur) + mobilitePions(plateau, joueur) + controleDiagonales(plateau, joueur) + protectionMaitre(plateau, joueur)
+    scoreJoueur = nbMouvDispo(plateau, joueur) + controleCentrePlateau(plateau, joueur) + menaceMaitre(plateau, joueur) + mobilitePions(plateau, joueur) + controleDiagonales(plateau, joueur) #+ protectionMaitre(plateau, joueur)
     if joueur.getCouleur() == "Rouge" : 
         scoreAdverse = nbMouvDispo(plateau, plateau.getJoueurBleu()) + controleCentrePlateau(plateau, plateau.getJoueurBleu()) + menaceMaitre(plateau, plateau.getJoueurBleu()) + mobilitePions(plateau, plateau.getJoueurBleu()) + controleDiagonales(plateau, plateau.getJoueurBleu()) #+ protectionMaitre(plateau, plateau.getJoueurBleu())
     else :
@@ -165,7 +165,7 @@ def minimax(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, li
             return -float('inf'), listeMeilleursCoups
         
     if profondeur <= 0 : 
-        return eval(plateau, joueurIA,not(boolMax)), listeMeilleursCoups
+        return evalScore(plateau, joueurIA,not(boolMax)), listeMeilleursCoups
 
     if boolMax :
         bestValue = -float('inf')
