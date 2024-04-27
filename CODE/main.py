@@ -53,8 +53,8 @@ def joueurIaMinimax(plateau,profondeur,joueurIA, joueurHumain, max) :
     """
     joueur ia minimax
     """
-    print("TOUR DE L'IA moyenne (minimax).")
-    print("Cartes : \n" + "1. " + str(joueurIA.getCartes()[0]) + "\n2. " + str(joueurIA.getCartes()[1]))
+    # print("TOUR DE L'IA moyenne (minimax).")
+    # print("Cartes : \n" + "1. " + str(joueurIA.getCartes()[0]) + "\n2. " + str(joueurIA.getCartes()[1]))
 
     if max :
         meilleurCoup = meilleur_coup_minimax(plateau,profondeur,joueurIA,joueurHumain, joueurIA, True)
@@ -73,8 +73,8 @@ def joueurIaAlphabeta(plateau,profondeur,joueurIA, joueurHumain, max) :
     """
     joueur ia alphabeta
     """
-    print("TOUR DE L'IA difficile (alphaBeta).")
-    print("Cartes : \n" + "1. " + str(joueurIA.getCartes()[0]) + "\n2. " + str(joueurIA.getCartes()[1]))
+    # print("TOUR DE L'IA difficile (alphaBeta).")
+    # print("Cartes : \n" + "1. " + str(joueurIA.getCartes()[0]) + "\n2. " + str(joueurIA.getCartes()[1]))
 
     if max :
         meilleurCoup = meilleur_coup_alpha_beta(plateau,profondeur,joueurIA,joueurHumain, joueurIA, True)
@@ -92,8 +92,8 @@ def joueurIaGlouton(plateau,joueurIA, max) :
     """
     joueur ia glouton
     """
-    print("TOUR DE L'IA facile (glouton).")
-    print("Cartes : \n" + "1. " + str(joueurIA.getCartes()[0]) + "\n2. " + str(joueurIA.getCartes()[1]))
+    # print("TOUR DE L'IA facile (glouton).")
+    # print("Cartes : \n" + "1. " + str(joueurIA.getCartes()[0]) + "\n2. " + str(joueurIA.getCartes()[1]))
     meilleurCoup = meilleur_coup_glouton(plateau,joueurIA, max)
 
     pion = meilleurCoup[0]
@@ -361,16 +361,12 @@ def partieIaVSIa(ia1,ia2):
 
     while gameOn :
         if tour%2 == 1 :
-            print("\nCartes du joueur adverse (Bleu) : \n" + "1. " + str(plateau.getJoueurBleu().getCartes()[0]) + "\n2. " + str(plateau.getJoueurBleu().getCartes()[1]))
-            print(plateau)
             if joueurIA1.getCouleur() == "Rouge" :
                 cartePlateau = joueurIA(plateau,joueurIA1,joueurIA2,max,ia1)
             else :
                 cartePlateau = joueurIA(plateau,joueurIA2,joueurIA1,max,ia2)
 
         if tour%2 == 0 :
-            print("\nCartes du joueur adverse (Rouge) : \n" + "1. " + str(plateau.getJoueurRouge().getCartes()[0]) + "\n2. " + str(plateau.getJoueurRouge().getCartes()[1]))
-            print(plateau)
             if joueurIA1.getCouleur() == "Bleu" :
                 cartePlateau = joueurIA(plateau,joueurIA1,joueurIA2,max,ia1)
             else :
@@ -380,13 +376,15 @@ def partieIaVSIa(ia1,ia2):
         tour+=1
                 
         if plateau.gameOver() :
+            gameOn = False
             print("--------------------------------fin de partie-----------------------------------")
             print(plateau)
-            print("Le joueur GAGNANT est le joueur "+plateau.joueurGagnant()+".")
-            gameOn = False
-
-
-    return
+            if(plateau.joueurGagnant() == joueurIA1.getCouleur()):
+                print("Le joueur GAGNANT est le joueur de difficulte "+str(ia1)+".")
+                return ia1
+            else : 
+                print("Le joueur GAGNANT est le joueur de difficulte "+str(ia2)+".")  
+                return ia2 
 
 def partieIaVSHumain(ia) :
     #differents niveaux de l'IA
@@ -428,5 +426,25 @@ def menu() :
         n2 = verifInput("1. Facile\n2. Moyen\n3. Difficle\n",1,3)
         partieIaVSIa(n1,n2)
         #ia contre ia
-    
-menu()
+
+facile =0
+moyen = 0
+difficile = 0
+
+for i in range(50): 
+    print(f"+++++++++++++++++++++++++++++++++++partie {i}++++++++++++++++++++++++++++++++++")  
+    res = partieIaVSIa(1,2)
+    if res == 1:
+        facile+=1
+    elif res == 2:
+        moyen+=1
+    elif res == 3:
+        difficile+=1
+
+'''
+    partieIaVSIa(1,2)
+    partieIaVSIa(1,3)
+    partieIaVSIa(2,3)
+
+
+'''
