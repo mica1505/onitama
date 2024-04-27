@@ -5,7 +5,7 @@ import copy
 import random
 
 
-def eval(plateau,joueur,max):
+def evalScore(plateau,joueur,max):
     """
     Plateau x Joueur -> int
     """
@@ -25,15 +25,28 @@ def distanceMaitre(plateau, joueur) :
     Evalue la distance entre le maitre du joueur et celui de l'adversaire
     """
     nbPieceActuelles = len(joueur.getListePions())
-    redSensei = plateau.getJoueurRouge().getSensei().getPos()
-    blueSensei = plateau.getJoueurBleu().getSensei().getPos()
-    print(redSensei, blueSensei)
+    # joueurRouge =  plateau.getJoueurRouge().getListePions()
+    # for i in joueurRouge :
+    #     print(i.getPos())
+    #     print(i.getSensei())
+    #     print(plateau.voiePierre())
+    # print(joueurRouge)
+    # if plateau.voiePierre():
+    #     Sensei = plateau.getJoueurRouge().getSensei()
+    #     print("sensei : ",Sensei)
+    #     redSensei = plateau.getJoueurRouge().getSensei().getPos()
+    #     blueSensei = plateau.getJoueurBleu().getSensei().getPos()
+    #     print(redSensei, blueSensei)
 
     if joueur.getCouleur() == "Rouge" :
+        redSensei = joueur.getSensei().getPos()
+        blueSensei = plateau.getJoueurBleu().getSensei().getPos()
         nbPieceAdversaire = len(plateau.getJoueurBleu().getListePions())
         proximite_actuelle = ((redSensei[0]-blueSensei[0])*(redSensei[0]-blueSensei[0])) + ((redSensei[1]-blueSensei[1])*(redSensei[1]-blueSensei[1]))
         proximite_adversaire = ((blueSensei[0]-redSensei[0])*(blueSensei[0]-redSensei[0])) + ((blueSensei[1]-redSensei[1])*(blueSensei[1]-redSensei[1]))
     else :
+        redSensei = plateau.getJoueurRouge().getSensei().getPos()
+        blueSensei = joueur.getSensei().getPos()
         nbPieceAdversaire = len(plateau.getJoueurRouge().getListePions())
         proximite_actuelle = ((blueSensei[0]-redSensei[0])*(blueSensei[0]-redSensei[0])) + ((blueSensei[1]-redSensei[1])*(blueSensei[1]-redSensei[1]))
         proximite_adversaire = ((redSensei[0]-blueSensei[0])*(redSensei[0]-blueSensei[0])) + ((redSensei[1]-blueSensei[1])*(redSensei[1]-blueSensei[1]))
@@ -129,8 +142,8 @@ def evalPosition(plateau, joueur, max) :
     Evalue la position d'un joueur
     """
     scoreJoueur = 0
-    #score += distanceMaitre(plateau, joueur)
-    scoreJoueur = nbMouvDispo(plateau, joueur) + controleCentrePlateau(plateau, joueur) + menaceMaitre(plateau, joueur) + mobilitePions(plateau, joueur) + controleDiagonales(plateau, joueur) #+ protectionMaitre(plateau, joueur)
+    #scoreJoueur += distanceMaitre(plateau, joueur)
+    scoreJoueur = nbMouvDispo(plateau, joueur) + controleCentrePlateau(plateau, joueur) + menaceMaitre(plateau, joueur) + mobilitePions(plateau, joueur) + controleDiagonales(plateau, joueur) + protectionMaitre(plateau, joueur)
     if joueur.getCouleur() == "Rouge" : 
         scoreAdverse = nbMouvDispo(plateau, plateau.getJoueurBleu()) + controleCentrePlateau(plateau, plateau.getJoueurBleu()) + menaceMaitre(plateau, plateau.getJoueurBleu()) + mobilitePions(plateau, plateau.getJoueurBleu()) + controleDiagonales(plateau, plateau.getJoueurBleu()) #+ protectionMaitre(plateau, plateau.getJoueurBleu())
     else :
@@ -227,7 +240,7 @@ def alphabeta(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, 
             return -float('inf'), listeMeilleursCoups
         
     if profondeur <= 0 : 
-        return eval(plateau, joueurIA, boolMax), listeMeilleursCoups
+        return evalPosition(plateau, joueurIA, boolMax), listeMeilleursCoups
 
     if boolMax :
         bestValue = -float('inf')

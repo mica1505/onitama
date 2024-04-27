@@ -112,8 +112,8 @@ def partieHumain() :
 
     couleurs = ["Rouge", "Bleu"]
     random.shuffle(couleurs)
-    joueur1 = Joueur(cartes[:2],couleurs[0],None,None)
-    joueur2 = Joueur(cartes[2:4],couleurs[1],None,None)
+    joueur1 = Joueur(cartes[:2],couleurs[0],None)
+    joueur2 = Joueur(cartes[2:4],couleurs[1],None)
 
     if joueur1.getCouleur() == "Rouge" :
         plateau = Plateau(joueur1,joueur2,cartes[-1])
@@ -158,8 +158,8 @@ def partieIaMinimax() :
     couleurs = ["Rouge", "Bleu"]
     random.shuffle(couleurs)
 
-    joueurH = Joueur(cartes[:2],couleurs[0],False,None)
-    joueurIA = Joueur(cartes[2:4],couleurs[1],True,3)
+    joueurH = Joueur(cartes[:2],couleurs[0],None)
+    joueurIA = Joueur(cartes[2:4],couleurs[1],3)
 
     profondeur = 3
     if joueurH.getCouleur() == "Rouge" :
@@ -216,8 +216,8 @@ def partieIaAlphabeta() :
     couleurs = ["Rouge", "Bleu"]
     random.shuffle(couleurs)
 
-    joueurH = Joueur(cartes[:2],couleurs[0],False,None)
-    joueurIA = Joueur(cartes[2:4],couleurs[1],True,3)
+    joueurH = Joueur(cartes[:2],couleurs[0],None)
+    joueurIA = Joueur(cartes[2:4],couleurs[1],3)
 
     profondeur = 5
     if joueurH.getCouleur() == "Rouge" :
@@ -274,8 +274,8 @@ def partieIaGlouton() :
     couleurs = ["Rouge", "Bleu"]
     random.shuffle(couleurs)
 
-    joueurH = Joueur(cartes[:2],couleurs[0],False,None)
-    joueurIA = Joueur(cartes[2:4],couleurs[1],True,None)
+    joueurH = Joueur(cartes[:2],couleurs[0],None)
+    joueurIA = Joueur(cartes[2:4],couleurs[1],None)
 
     if joueurH.getCouleur() == "Rouge" :
         plateau = Plateau(joueurH,joueurIA,cartes[-1])
@@ -342,7 +342,7 @@ def menu() :
     print("2. Jeu humain vs ia.")
     print("3. Jeu ia vs ia.")
     jeu = int(input())
-    while jeu<1 and jeu > 3 :
+    while jeu < 1 and jeu > 3 :
         jeu = int(input())
 
     if jeu == 1 :
