@@ -115,12 +115,6 @@ class Plateau:
                 self.grille[0][i] = 'r'
                 self.grille[4][i] = 'b'
 
-    def copierPlateau(self):
-        nouveauPlateau = Plateau(self.joueurRouge,self.joueurBleu,self.carte)
-        nouveauPlateau.dim = self.dim
-        nouveauPlateau.rs = self.rs
-        nouveauPlateau.bs = self.bs
-            
     def echange(self, joueur, carte):
         """
         Echange la carte du plateau avec la carte joue par un joueur

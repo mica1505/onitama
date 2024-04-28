@@ -32,7 +32,7 @@ class Joueur :
 
     def getListePions(self) :
         """
-        Retourne les pions du joueur
+        Retourne la liste des pions du joueur
         """
         return self.pions
 

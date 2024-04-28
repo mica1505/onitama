@@ -12,7 +12,7 @@ class Carte:
     '''
     def __str__(self):
         """
-        Retourne sous forme de chaine de caractere attributs de la carte
+        Retourne sous forme de chaine de caractere les attributs de la carte
         """
         mouvs = ""
         for m in self.mouvements:
@@ -36,4 +36,7 @@ class Carte:
         return self.mouvements
     
     def __eq__(self, autre):
+        """
+        Retourne vrai si les 2 cartes ont le meme nom, faux sinon
+        """
         return self.nom == autre.nom

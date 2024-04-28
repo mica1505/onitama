@@ -30,12 +30,18 @@ class Mouvement :
             return  'B'
 
     def discipleAdverse(piece):
+        """
+        Retourne la couleur du pion adverse
+        """
         if Mouvement.couleurPion(piece) == "b":
             return "r"
         else : 
             return "b" 
         
     def senseiAdverse(piece):
+        """
+        Retourne la couleur du sensei adverse
+        """
         if Mouvement.couleurSensei(piece) == "B":
             return "R"
         else : 
@@ -95,7 +101,7 @@ class Mouvement :
         
     def deplacer(plateau,piece,coup) : 
         """
-        Deplace le pion en fonction du coup choisi
+        Deplace le pion en fonction du coup(carte) choisi par le joueur
         """
         if plateau.getGrille()[coup[0]][coup[1]] == Mouvement.senseiAdverse(piece):
             if Mouvement.senseiAdverse(piece) == "B":

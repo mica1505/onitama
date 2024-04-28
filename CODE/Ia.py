@@ -8,6 +8,7 @@ import random
 def evalScore(plateau,joueur,max):
     """
     Plateau x Joueur -> int
+    Evlue le score le score des joueurs
     """
     scoreJoueur = joueur.getScore()
     if joueur.getCouleur == "Rouge" :
@@ -25,18 +26,6 @@ def distanceMaitre(plateau, joueur) :
     Evalue la distance entre le maitre du joueur et celui de l'adversaire
     """
     nbPieceActuelles = len(joueur.getListePions())
-    # joueurRouge =  plateau.getJoueurRouge().getListePions()
-    # for i in joueurRouge :
-    #     print(i.getPos())
-    #     print(i.getSensei())
-    #     print(plateau.voiePierre())
-    # print(joueurRouge)
-    # if plateau.voiePierre():
-    #     Sensei = plateau.getJoueurRouge().getSensei()
-    #     print("sensei : ",Sensei)
-    #     redSensei = plateau.getJoueurRouge().getSensei().getPos()
-    #     blueSensei = plateau.getJoueurBleu().getSensei().getPos()
-    #     print(redSensei, blueSensei)
 
     if joueur.getCouleur() == "Rouge" :
         redSensei = joueur.getSensei().getPos()
