@@ -101,7 +101,7 @@ class Mouvement :
         
     def deplacer(plateau,piece,coup) : 
         """
-        Deplace le pion en fonction du coup choisi
+        Deplace le pion en fonction du coup(carte) choisi par le joueur
         """
         if plateau.getGrille()[coup[0]][coup[1]] == Mouvement.senseiAdverse(piece):
             if Mouvement.senseiAdverse(piece) == "B":

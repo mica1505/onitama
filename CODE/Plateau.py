@@ -114,6 +114,7 @@ class Plateau:
                 self.joueurBleu.setListePions(discipleBleu)
                 self.grille[0][i] = 'r'
                 self.grille[4][i] = 'b'
+
             
     def echange(self, joueur, carte):
         """

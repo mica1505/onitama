@@ -431,7 +431,6 @@ def menu() :
 facile =0
 moyen = 0
 difficile = 0
-
 for i in range(1,51): 
     print(f"+++++++++++++++++++++++++++++++++++partie {i}++++++++++++++++++++++++++++++++++")  
     res = partieIaVSIa(1,2)
@@ -441,7 +440,8 @@ for i in range(1,51):
         moyen+=1
     elif res == 3:
         difficile+=1
-    print("facile : ",facile, "moyen : ",moyen, "difficile : ", difficile)
+    print(facile,moyen,difficile)
+    
 
 '''
     partieIaVSIa(1,2)
