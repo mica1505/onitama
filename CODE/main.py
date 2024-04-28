@@ -66,6 +66,7 @@ def joueurIaMinimax(plateau,profondeur,joueurIA, joueurHumain, max) :
     coup = meilleurCoup[2]
 
     Mouvement.deplacer(plateau,pion,coup)
+    print("coup joué : ", coup, " carte joué : ", str(carte))
     return plateau.echange(joueurIA, carte)
 
 
@@ -86,6 +87,7 @@ def joueurIaAlphabeta(plateau,profondeur,joueurIA, joueurHumain, max) :
     coup = meilleurCoup[2]
 
     Mouvement.deplacer(plateau,pion,coup)
+    print("coup joué : ", coup, " carte joué : ", str(carte))
     return plateau.echange(joueurIA, carte)
 
 def joueurIaGlouton(plateau,joueurIA, max) :
@@ -101,6 +103,7 @@ def joueurIaGlouton(plateau,joueurIA, max) :
     coup = meilleurCoup[2]
 
     Mouvement.deplacer(plateau,pion,coup)
+    print("coup joué : ", coup, " carte joué : ", str(carte))
     return plateau.echange(joueurIA, carte)
 
 def partieHumain() :
@@ -360,7 +363,7 @@ def partieIaVSIa(ia1,ia2):
         max = True
 
     while gameOn :
-        # print(plateau)
+        print(plateau)
         if tour%2 == 1 :
             if joueurIA1.getCouleur() == "Rouge" :
                 cartePlateau = joueurIA(plateau,joueurIA1,joueurIA2,max,ia1)
@@ -431,7 +434,6 @@ def menu() :
 facile =0
 moyen = 0
 difficile = 0
-res = 0
 for i in range(1,51): 
     print(f"+++++++++++++++++++++++++++++++++++partie {i}++++++++++++++++++++++++++++++++++")  
     res = partieIaVSIa(1,2)

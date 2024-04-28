@@ -115,6 +115,7 @@ class Plateau:
                 self.grille[0][i] = 'r'
                 self.grille[4][i] = 'b'
 
+            
     def echange(self, joueur, carte):
         """
         Echange la carte du plateau avec la carte joue par un joueur
@@ -147,9 +148,6 @@ class Plateau:
             return True
         else : 
             return False
-        
-    def coupGagnant(self):
-        return not(self.voiePierre()) or self.voieRuisseau()
     
     def getPion(self,pos):
         """
