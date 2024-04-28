@@ -44,7 +44,7 @@ def distanceMaitre(plateau, joueur) :
 
 def nbMouvDispo(plateau,joueur) :
     """
-    Retourne le nombre de mouvement disponibles pour le joueur
+    Retourne le nombre de mouvements disponibles pour le joueur
     """
     return len(Mouvement.listeCoupsLegaux(plateau,joueur))
 
@@ -82,7 +82,7 @@ def protectionMaitre(plateau, joueur) :
     
 def menaceMaitre(plateau, joueur) :
     """
-    Evalue le nombre de piece qui menace le maitre adverse
+    Evalue le nombre de pieces qui menaces le maitre adverse
     """
     menace = 0
     if joueur.getCouleur() == "Rouge" : 
@@ -333,7 +333,7 @@ def glouton(plateau, joueurIA, boolMax) :
                     Mouvement.deplacer(child, piece, coup) #Joue le coup
                     child.echange(player, carte) #Echange la carte du joueur
 
-                    valeur = evalScore(child, joueurIA, boolMax) #Evalue le coup joue
+                    valeur = evalPosition(child, joueurIA, boolMax) #Evalue le coup joue
                     piece.setPos(depart) #Remet en place la piece
 
                     if valeur > meilleurVal : #Si le coup joue a un meilleur score
