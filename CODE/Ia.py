@@ -8,6 +8,7 @@ import random
 def evalScore(plateau,joueur,max):
     """
     Plateau x Joueur -> int
+    Retourne le score du joueur en fonction des pieces du plateau
     """
     scoreJoueur = joueur.getScore()
     if joueur.getCouleur == "Rouge" :
@@ -25,18 +26,6 @@ def distanceMaitre(plateau, joueur) :
     Evalue la distance entre le maitre du joueur et celui de l'adversaire
     """
     nbPieceActuelles = len(joueur.getListePions())
-    # joueurRouge =  plateau.getJoueurRouge().getListePions()
-    # for i in joueurRouge :
-    #     print(i.getPos())
-    #     print(i.getSensei())
-    #     print(plateau.voiePierre())
-    # print(joueurRouge)
-    # if plateau.voiePierre():
-    #     Sensei = plateau.getJoueurRouge().getSensei()
-    #     print("sensei : ",Sensei)
-    #     redSensei = plateau.getJoueurRouge().getSensei().getPos()
-    #     blueSensei = plateau.getJoueurBleu().getSensei().getPos()
-    #     print(redSensei, blueSensei)
 
     if joueur.getCouleur() == "Rouge" :
         redSensei = joueur.getSensei().getPos()
@@ -142,7 +131,7 @@ def evalPosition(plateau, joueur, max) :
     Evalue la position d'un joueur
     """
     scoreJoueur = 0
-    #scoreJoueur += distanceMaitre(plateau, joueur)
+    # scoreJoueur += distanceMaitre(plateau, joueur)
     scoreJoueur = nbMouvDispo(plateau, joueur) + controleCentrePlateau(plateau, joueur) + menaceMaitre(plateau, joueur) + mobilitePions(plateau, joueur) + controleDiagonales(plateau, joueur) #+ protectionMaitre(plateau, joueur)
     if joueur.getCouleur() == "Rouge" : 
         scoreAdverse = nbMouvDispo(plateau, plateau.getJoueurBleu()) + controleCentrePlateau(plateau, plateau.getJoueurBleu()) + menaceMaitre(plateau, plateau.getJoueurBleu()) + mobilitePions(plateau, plateau.getJoueurBleu()) + controleDiagonales(plateau, plateau.getJoueurBleu()) #+ protectionMaitre(plateau, plateau.getJoueurBleu())
@@ -158,72 +147,75 @@ def minimax(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, li
     """
     algorithme minimax
     """
+    #Verifie si la partie est fini
     if plateau.gameOver() :
         if plateau.joueurGagnant() == joueurMax.getCouleur() :
             return float('inf'), listeMeilleursCoups
         else : 
             return -float('inf'), listeMeilleursCoups
         
+    #Verifie si la profondeur de calcul est atteinte
     if profondeur <= 0 : 
-        return evalScore(plateau, joueurIA,not(boolMax)), listeMeilleursCoups
+        return evalPosition(plateau, joueurIA,not(boolMax)), listeMeilleursCoups
 
+    #Si c'est le joueur Max
     if boolMax :
         bestValue = -float('inf')
         listeCartes = joueurMax.getCartes()
         listePions = joueurMax.getListePions()
-        for carte in listeCartes :
-            for piece in listePions :
+        for carte in listeCartes : #Parcours la liste de cartes
+            for piece in listePions : #Parcours la liste de pions
                 mouvements = carte.getMouvs()
-                for move in mouvements :
-                    child = copy.deepcopy(plateau)
-                    player = copy.deepcopy(joueurMax)
-                    depart = piece.getPos()
-                    arrive = Mouvement.pionAutorise(child,piece,move)
-                    if joueurMax.getCouleur() == "Rouge":
+                for move in mouvements : #Parcours les mouvements de la carte
+                    child = copy.deepcopy(plateau) #Creer une copie du plateau
+                    player = copy.deepcopy(joueurMax) #Creer une copie du joueur Max
+                    depart = piece.getPos() #Position de depart de la piece
+                    arrive = Mouvement.pionAutorise(child,piece,move) 
+                    if joueurMax.getCouleur() == "Rouge": #Recupere le deplacement de la piece
                         coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
                     else : 
                         coup = (piece.getPos()[0] - move[0], piece.getPos()[1] + move[1])
  
-                    if arrive == True : 
-                        Mouvement.deplacer(child,piece,coup)
-                        child.echange(player,carte)
+                    if arrive == True : #Si le coup est autorise
+                        Mouvement.deplacer(child,piece,coup) #Joue le coup
+                        child.echange(player,carte)  #Echange la carte du joueur
                         MeilleursCoups = [piece,carte,coup]
                         
                         retVal, listeMeilleursCoups = minimax(child,profondeur-1,alpha,beta,joueurMax, joueurMin, joueurIA, listeMeilleursCoups, False)
-                        piece.setPos(depart)
+                        piece.setPos(depart) #Remet la piece en position
 
-                        if retVal > bestValue :
+                        if retVal > bestValue : #Si la valeur du coup joue est meilleur 
                             listeMeilleursCoups = MeilleursCoups
                             bestValue = retVal
 
         return bestValue, listeMeilleursCoups
-                        
+    #Sinon joueur Min                    
     else :
         bestValue = float('inf')
         listeCartes = joueurMin.getCartes()
         listePions = joueurMin.getListePions()
-        for carte in listeCartes :
-            for piece in listePions :
+        for carte in listeCartes : #Parcours la liste de cartes
+            for piece in listePions : #Parcours la liste de pions
                 mouvements = carte.getMouvs()
-                for move in mouvements :
-                    child = copy.deepcopy(plateau)
-                    player = copy.deepcopy(joueurMin)
-                    depart = piece.getPos()
-                    arrive = Mouvement.pionAutorise(child,piece,move)
-                    if joueurMin.getCouleur() == "Rouge":
+                for move in mouvements : #Parcours les mouvements de la carte
+                    child = copy.deepcopy(plateau) #Creer une copie du plateau
+                    player = copy.deepcopy(joueurMin) #Creer une copie du joueur Min
+                    depart = piece.getPos() #Position de depart de la piece
+                    arrive = Mouvement.pionAutorise(child,piece,move) 
+                    if joueurMin.getCouleur() == "Rouge": #Recupere le deplacement de la piece
                         coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
                     else : 
                         coup = (piece.getPos()[0] - move[0], piece.getPos()[1] + move[1])
 
-                    if arrive == True : 
-                        Mouvement.deplacer(child,piece,coup)
-                        child.echange(player,carte)
+                    if arrive == True : #Si le coup est autorise
+                        Mouvement.deplacer(child,piece,coup) #Joue le coup
+                        child.echange(player,carte)  #Echange la carte du joueur
                         MeilleursCoups = [piece,carte,coup]
- 
+                        
                         retVal, listeMeilleursCoups = minimax(child,profondeur-1,alpha,beta,joueurMax, joueurMin, joueurIA, listeMeilleursCoups, True)
-                        piece.setPos(depart)
+                        piece.setPos(depart) #Remet la piece en position
 
-                        if  retVal < bestValue :
+                        if retVal < bestValue : #Si la valeur du coup joue est plus petit
                             bestValue = retVal
                             listeMeilleursCoups = MeilleursCoups
                         
@@ -233,41 +225,44 @@ def alphabeta(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, 
     """
     algorithme alphabeta
     """
+     #Verifie si la partie est fini
     if plateau.gameOver() :
         if plateau.joueurGagnant() == joueurMax.getCouleur() :
             return float('inf'), listeMeilleursCoups
         else : 
             return -float('inf'), listeMeilleursCoups
         
+    #Verifie si la profondeur de calcul est atteinte
     if profondeur <= 0 : 
-        return evalPosition(plateau, joueurIA, boolMax), listeMeilleursCoups
+        return evalPosition(plateau, joueurIA,not(boolMax)), listeMeilleursCoups
 
+    #Si c'est le joueur Max
     if boolMax :
         bestValue = -float('inf')
         listeCartes = joueurMax.getCartes()
         listePions = joueurMax.getListePions()
-        for carte in listeCartes :
-            for piece in listePions :
+        for carte in listeCartes : #Parcours la liste de cartes
+            for piece in listePions : #Parcours la liste de pions
                 mouvements = carte.getMouvs()
-                for move in mouvements :
-                    child = copy.deepcopy(plateau)
-                    player = copy.deepcopy(joueurMax)
-                    depart = piece.getPos()
-                    arrive = Mouvement.pionAutorise(child,piece,move)
-                    if joueurMax.getCouleur() == "Rouge":
+                for move in mouvements : #Parcours les mouvements de la carte
+                    child = copy.deepcopy(plateau) #Creer une copie du plateau
+                    player = copy.deepcopy(joueurMax) #Creer une copie du joueur Max
+                    depart = piece.getPos() #Position de depart de la piece
+                    arrive = Mouvement.pionAutorise(child,piece,move) 
+                    if joueurMax.getCouleur() == "Rouge": #Recupere le deplacement de la piece
                         coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
                     else : 
                         coup = (piece.getPos()[0] - move[0], piece.getPos()[1] + move[1])
  
-                    if arrive == True : 
-                        Mouvement.deplacer(child,piece,coup)
-                        child.echange(player,carte)
+                    if arrive == True : #Si le coup est autorise
+                        Mouvement.deplacer(child,piece,coup) #Joue le coup
+                        child.echange(player,carte)  #Echange la carte du joueur
                         MeilleursCoups = [piece,carte,coup]
                         
                         retVal, listeMeilleursCoups = alphabeta(child,profondeur-1,alpha,beta,joueurMax, joueurMin, joueurIA, listeMeilleursCoups, False)
-                        piece.setPos(depart)
+                        piece.setPos(depart) #Remet la piece en position
 
-                        if retVal > bestValue :
+                        if retVal > bestValue : #Si la valeur du coup joue est meilleur 
                             listeMeilleursCoups = MeilleursCoups
                             bestValue = retVal
                         
@@ -276,33 +271,33 @@ def alphabeta(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, 
                             break #elagage
 
         return bestValue, listeMeilleursCoups
-                        
+    #Sinon joueur Min                   
     else :
         bestValue = float('inf')
         listeCartes = joueurMin.getCartes()
         listePions = joueurMin.getListePions()
-        for carte in listeCartes :
-            for piece in listePions :
+        for carte in listeCartes : #Parcours la liste de cartes
+            for piece in listePions : #Parcours la liste de pions
                 mouvements = carte.getMouvs()
-                for move in mouvements :
-                    child = copy.deepcopy(plateau)
-                    player = copy.deepcopy(joueurMin)
-                    depart = piece.getPos()
-                    arrive = Mouvement.pionAutorise(child,piece,move)
-                    if joueurMin.getCouleur() == "Rouge":
+                for move in mouvements : #Parcours les mouvements de la carte
+                    child = copy.deepcopy(plateau) #Creer une copie du plateau
+                    player = copy.deepcopy(joueurMin) #Creer une copie du joueur Min
+                    depart = piece.getPos() #Position de depart de la piece
+                    arrive = Mouvement.pionAutorise(child,piece,move) 
+                    if joueurMin.getCouleur() == "Rouge": #Recupere le deplacement de la piece
                         coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
                     else : 
                         coup = (piece.getPos()[0] - move[0], piece.getPos()[1] + move[1])
 
-                    if arrive == True : 
-                        Mouvement.deplacer(child,piece,coup)
-                        child.echange(player,carte)
+                    if arrive == True : #Si le coup est autorise
+                        Mouvement.deplacer(child,piece,coup) #Joue le coup
+                        child.echange(player,carte)  #Echange la carte du joueur
                         MeilleursCoups = [piece,carte,coup]
  
-                        retVal, listeMeilleursCoups = alphabeta(child,profondeur-1,alpha,beta,joueurMax, joueurMin, joueurIA, listeMeilleursCoups, True)
-                        piece.setPos(depart)
+                        retVal, listeMeilleursCoups = alphabeta(child,profondeur-1,alpha,beta,joueurMax, player, joueurIA, listeMeilleursCoups, True)
+                        piece.setPos(depart) #Remet la piece en position
 
-                        if retVal < bestValue :
+                        if retVal < bestValue : #Si la valeur du coup joue est plus petit
                             bestValue = retVal
                             listeMeilleursCoups = MeilleursCoups
 
@@ -321,31 +316,31 @@ def glouton(plateau, joueurIA, boolMax) :
     listeCartes = joueurIA.getCartes()
     listePions = joueurIA.getListePions()
 
-    for carte in listeCartes :
-        for piece in listePions :
+    for carte in listeCartes : #Parcours la liste de cartes
+        for piece in listePions : #Parcours la liste de pions
             mouvements = carte.getMouvs()
-            for move in mouvements :
-                child = copy.deepcopy(plateau)
-                player = copy.deepcopy(joueurIA)
-                depart = piece.getPos()
-                arrive = Mouvement.pionAutorise(child, piece, move)
-                if joueurIA.getCouleur() == "Rouge":
+            for move in mouvements : #Parcours les mouvements de la carte
+                child = copy.deepcopy(plateau) #Creer une copie du plateau
+                player = copy.deepcopy(joueurIA) #Creer une copie du joueur max
+                depart = piece.getPos() #Position de depart de la piece
+                arrive = Mouvement.pionAutorise(child,piece,move) 
+                if joueurIA.getCouleur() == "Rouge": #Recupere le deplacement de la piece
                     coup = (piece.getPos()[0] + move[0], piece.getPos()[1] + move[1])
                 else : 
                     coup = (piece.getPos()[0] - move[0], piece.getPos()[1] + move[1])
 
-                if arrive : 
-                    Mouvement.deplacer(child, piece, coup)
-                    child.echange(player, carte)
+                if arrive : #Si le coup est autorise
+                    Mouvement.deplacer(child, piece, coup) #Joue le coup
+                    child.echange(player, carte) #Echange la carte du joueur
 
-                    valeur = evalPosition(child, joueurIA, boolMax)
-                    piece.setPos(depart)
+                    valeur = evalScore(child, joueurIA, boolMax) #Evalue le coup joue
+                    piece.setPos(depart) #Remet en place la piece
 
-                    if valeur > meilleurVal :
+                    if valeur > meilleurVal : #Si le coup joue a un meilleur score
                         meilleurVal = valeur
                         meilleurCoup = [piece, carte, coup]
                     
-                    if child.gameOver():
+                    if child.gameOver() : #Verifie si le coup est gagnant
                         meilleurVal = float('inf')
                         meilleurCoup = [piece, carte, coup]
                         return meilleurCoup

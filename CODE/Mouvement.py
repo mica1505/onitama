@@ -30,12 +30,18 @@ class Mouvement :
             return  'B'
 
     def discipleAdverse(piece):
+        """
+        Retourne la couleur du disciple adverse
+        """
         if Mouvement.couleurPion(piece) == "b":
             return "r"
         else : 
             return "b" 
         
     def senseiAdverse(piece):
+        """
+        Retourne la couleur du sensei adverse
+        """
         if Mouvement.couleurSensei(piece) == "B":
             return "R"
         else : 
@@ -57,7 +63,7 @@ class Mouvement :
 
             if Mouvement.positionValide((x,y)) and plateau.getGrille()[x][y] == "." and (plateau.getGrille()[x][y]!=Mouvement.couleurPion(piece) or plateau.getGrille()[x][y]!=Mouvement.couleurSensei(piece)) : #Si la case est vide
                 coups.append((x,y))
-            elif Mouvement.positionValide((x,y)) and plateau.getGrille()[x][y] != "." and (plateau.getGrille()[x][y]==Mouvement.discipleAdverse(piece) or plateau.getGrille()[x][y]==Mouvement.senseiAdverse(piece)) : #Si la case est occupe par une piece adverse
+            elif Mouvement.positionValide((x,y)) and plateau.getGrille()[x][y] != "." and (plateau.getGrille()[x][y]==Mouvement.discipleAdverse(piece) or plateau.getGrille()[x][y]==Mouvement.senseiAdverse(piece)) and (plateau.getGrille()[x][y]!=Mouvement.couleurPion(piece) and plateau.getGrille()[x][y]!=Mouvement.couleurSensei(piece)) : #Si la case est occupe par une piece adverse
                 coups.append((x,y))
         return coups
     
@@ -72,9 +78,9 @@ class Mouvement :
             x = pion.getPos()[0] + coup[0]
             y = pion.getPos()[1] + coup[1]
 
-        if Mouvement.positionValide((x,y)) and plateau.getGrille()[x][y] == "." and (plateau.getGrille()[x][y]!=Mouvement.couleurPion(pion) or plateau.getGrille()[x][y]!=Mouvement.couleurSensei(pion)) : #Si la case est vide
+        if Mouvement.positionValide((x,y)) and plateau.getGrille()[x][y] == "." and (plateau.getGrille()[x][y]!=Mouvement.couleurPion(pion) or plateau.getGrille()[x][y]!=Mouvement.couleurSensei(pion)) and (plateau.getGrille()[x][y]!=Mouvement.discipleAdverse(pion) or plateau.getGrille()[x][y]!=Mouvement.senseiAdverse(pion)) : #Si la case est vide 
             return True
-        elif Mouvement.positionValide((x,y)) and plateau.getGrille()[x][y] != "." and (plateau.getGrille()[x][y]==Mouvement.discipleAdverse(pion) or plateau.getGrille()[x][y]==Mouvement.senseiAdverse(pion))  : #Si la case est occupe par une piece adverse
+        elif Mouvement.positionValide((x,y)) and plateau.getGrille()[x][y] != "." and (plateau.getGrille()[x][y]==Mouvement.discipleAdverse(pion) or plateau.getGrille()[x][y]==Mouvement.senseiAdverse(pion)) and (plateau.getGrille()[x][y]!=Mouvement.couleurPion(pion) and plateau.getGrille()[x][y]!=Mouvement.couleurSensei(pion)) : #Si la case est occupe par une piece adverse
             return True
         else : 
             return False
@@ -130,7 +136,7 @@ class Mouvement :
                             y = piece.getPos()[1] + deplacement[1]
 
                         if Mouvement.positionValide((x,y)) and plateau.getGrille()[x][y] == "." and (plateau.getGrille()[x][y]!=Mouvement.couleurPion(piece) or plateau.getGrille()[x][y]!=Mouvement.couleurSensei(piece)) : #Si la case est vide
-                            coups.append(((piece),(x,y)))
-                        elif Mouvement.positionValide((x,y)) and plateau.getGrille()[x][y] != "." and (plateau.getGrille()[x][y]==Mouvement.discipleAdverse(piece) or plateau.getGrille()[x][y]==Mouvement.senseiAdverse(piece)) : #Si la case est occupe par une piece adverse
-                            coups.append(((piece),(x,y)))
+                            coups.append(((piece),(x,y),carte))
+                        elif Mouvement.positionValide((x,y)) and plateau.getGrille()[x][y] != "." and (plateau.getGrille()[x][y]==Mouvement.discipleAdverse(piece) or plateau.getGrille()[x][y]==Mouvement.senseiAdverse(piece)) and (plateau.getGrille()[x][y]!=Mouvement.couleurPion(piece) and plateau.getGrille()[x][y]!=Mouvement.couleurSensei(piece)) : #Si la case est occupe par une piece adverse
+                            coups.append(((piece),(x,y),carte))
             return coups

@@ -114,12 +114,6 @@ class Plateau:
                 self.joueurBleu.setListePions(discipleBleu)
                 self.grille[0][i] = 'r'
                 self.grille[4][i] = 'b'
-
-    def copierPlateau(self):
-        nouveauPlateau = Plateau(self.joueurRouge,self.joueurBleu,self.carte)
-        nouveauPlateau.dim = self.dim
-        nouveauPlateau.rs = self.rs
-        nouveauPlateau.bs = self.bs
             
     def echange(self, joueur, carte):
         """
@@ -153,9 +147,6 @@ class Plateau:
             return True
         else : 
             return False
-        
-    def coupGagnant(self):
-        return not(self.voiePierre()) or self.voieRuisseau()
     
     def getPion(self,pos):
         """
