@@ -361,6 +361,7 @@ def partieIaVSIa(ia1,ia2):
         max = True
 
     while gameOn :
+        print(plateau)
         if tour%2 == 1 :
             if joueurIA1.getCouleur() == "Rouge" :
                 cartePlateau = joueurIA(plateau,joueurIA1,joueurIA2,max,ia1)
@@ -426,21 +427,20 @@ def menu() :
         print("Niveau IA2 : ")
         n2 = verifInput("1. Facile\n2. Moyen\n3. Difficle\n",1,3)
         partieIaVSIa(n1,n2)
-        #ia contre ia
 
 facile =0
 moyen = 0
 difficile = 0
 for i in range(1,51): 
     print(f"+++++++++++++++++++++++++++++++++++partie {i}++++++++++++++++++++++++++++++++++")  
-    res = partieIaVSIa(1,2)
+    res = partieIaVSIa(1,3)
     if res == 1:
         facile+=1
     elif res == 2:
         moyen+=1
     elif res == 3:
         difficile+=1
-    print(facile,moyen,difficile)
+    print("facile : ",facile," moyen : ",moyen," difficile : ",difficile)
     
 
 '''

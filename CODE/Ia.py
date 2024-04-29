@@ -218,7 +218,6 @@ def minimax(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, li
                         if retVal < bestValue : #Si la valeur du coup joue est plus petit
                             bestValue = retVal
                             listeMeilleursCoups = MeilleursCoups
-                        
         return bestValue, listeMeilleursCoups
                         
 def alphabeta(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, listeMeilleursCoups, boolMax):
@@ -333,7 +332,7 @@ def glouton(plateau, joueurIA, boolMax) :
                     Mouvement.deplacer(child, piece, coup) #Joue le coup
                     child.echange(player, carte) #Echange la carte du joueur
 
-                    valeur = evalPosition(child, joueurIA, boolMax) #Evalue le coup joue
+                    valeur = evalScore(child, joueurIA, boolMax) #Evalue le coup joue
                     piece.setPos(depart) #Remet en place la piece
 
                     if valeur > meilleurVal : #Si le coup joue a un meilleur score
