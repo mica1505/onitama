@@ -447,6 +447,4 @@ for i in range(1,51):
     partieIaVSIa(1,2)
     partieIaVSIa(1,3)
     partieIaVSIa(2,3)
-
-
 '''

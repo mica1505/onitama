@@ -1,9 +1,7 @@
-import math
 from Plateau import Plateau
 from Mouvement import Mouvement
 import copy
-import random
-
+import time
 
 def evalScore(plateau,joueur,max):
     """
@@ -143,12 +141,13 @@ def evalPosition(plateau, joueur, max) :
     else : 
         return scoreAdverse - scoreJoueur
     
-def minimax(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, listeMeilleursCoups, boolMax):
+def minimax(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, listeMeilleursCoups, boolMax, maxTime, startTime):
     """
     algorithme minimax
     """
+
     #Verifie si la partie est fini
-    if plateau.gameOver() :
+    if plateau.gameOver() or (time.time() - startTime) >= maxTime :
         if plateau.joueurGagnant() == joueurMax.getCouleur() :
             return float('inf'), listeMeilleursCoups
         else : 
@@ -181,7 +180,7 @@ def minimax(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, li
                         child.echange(player,carte)  #Echange la carte du joueur
                         MeilleursCoups = [piece,carte,coup]
                         
-                        retVal, listeMeilleursCoups = minimax(child,profondeur-1,alpha,beta,joueurMax, joueurMin, joueurIA, listeMeilleursCoups, False)
+                        retVal, listeMeilleursCoups = minimax(child,profondeur-1,alpha,beta,joueurMax, joueurMin, joueurIA, listeMeilleursCoups, False, maxTime, startTime)
                         piece.setPos(depart) #Remet la piece en position
 
                         if retVal > bestValue : #Si la valeur du coup joue est meilleur 
@@ -212,7 +211,7 @@ def minimax(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, li
                         child.echange(player,carte)  #Echange la carte du joueur
                         MeilleursCoups = [piece,carte,coup]
                         
-                        retVal, listeMeilleursCoups = minimax(child,profondeur-1,alpha,beta,joueurMax, joueurMin, joueurIA, listeMeilleursCoups, True)
+                        retVal, listeMeilleursCoups = minimax(child,profondeur-1,alpha,beta,joueurMax, joueurMin, joueurIA, listeMeilleursCoups, True, maxTime, startTime)
                         piece.setPos(depart) #Remet la piece en position
 
                         if retVal < bestValue : #Si la valeur du coup joue est plus petit
@@ -220,12 +219,12 @@ def minimax(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, li
                             listeMeilleursCoups = MeilleursCoups
         return bestValue, listeMeilleursCoups
                         
-def alphabeta(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, listeMeilleursCoups, boolMax):
+def alphabeta(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, listeMeilleursCoups, boolMax, maxTime, startTime):
     """
     algorithme alphabeta
     """
      #Verifie si la partie est fini
-    if plateau.gameOver() :
+    if plateau.gameOver() or (time.time() - startTime) >= maxTime :
         if plateau.joueurGagnant() == joueurMax.getCouleur() :
             return float('inf'), listeMeilleursCoups
         else : 
@@ -258,7 +257,7 @@ def alphabeta(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, 
                         child.echange(player,carte)  #Echange la carte du joueur
                         MeilleursCoups = [piece,carte,coup]
                         
-                        retVal, listeMeilleursCoups = alphabeta(child,profondeur-1,alpha,beta,joueurMax, joueurMin, joueurIA, listeMeilleursCoups, False)
+                        retVal, listeMeilleursCoups = alphabeta(child,profondeur-1,alpha,beta,joueurMax, joueurMin, joueurIA, listeMeilleursCoups, False, maxTime,startTime)
                         piece.setPos(depart) #Remet la piece en position
 
                         if retVal > bestValue : #Si la valeur du coup joue est meilleur 
@@ -293,7 +292,7 @@ def alphabeta(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, 
                         child.echange(player,carte)  #Echange la carte du joueur
                         MeilleursCoups = [piece,carte,coup]
  
-                        retVal, listeMeilleursCoups = alphabeta(child,profondeur-1,alpha,beta,joueurMax, player, joueurIA, listeMeilleursCoups, True)
+                        retVal, listeMeilleursCoups = alphabeta(child,profondeur-1,alpha,beta,joueurMax, player, joueurIA, listeMeilleursCoups, True, maxTime, startTime)
                         piece.setPos(depart) #Remet la piece en position
 
                         if retVal < bestValue : #Si la valeur du coup joue est plus petit
@@ -351,14 +350,20 @@ def meilleur_coup_minimax(plateau,profondeur, joueurMax, joueurMin, joueurIA, bo
     """
     Retourne le meilleur coup du minimax
     """
-    val, meilleurCoup = minimax(plateau, profondeur, float('-inf'), float('inf'), joueurMax, joueurMin, joueurIA, [], boolIA)
+    maxTime = 10
+    startTime = time.time()
+    val, meilleurCoup = minimax(plateau, profondeur, float('-inf'), float('inf'), joueurMax, joueurMin, joueurIA, [], boolIA,10, startTime)
+    print("temps pour joue : ",time.time()-startTime)
     return meilleurCoup
 
 def meilleur_coup_alpha_beta(plateau,profondeur, joueurMax, joueurMin, joueurIA, boolIA) :
     """
     Retourne le meilleur coup d'alphabeta
     """
-    val, meilleurCoup = alphabeta(plateau, profondeur, float('-inf'), float('inf'), joueurMax, joueurMin, joueurIA, [], boolIA)
+    maxTime = 10
+    startTime = time.time()
+    val, meilleurCoup = alphabeta(plateau, profondeur, float('-inf'), float('inf'), joueurMax, joueurMin, joueurIA, [], boolIA,10, startTime)
+    print("temps pour joue : ",time.time()-startTime)
     return meilleurCoup
 
 def meilleur_coup_glouton(plateau, joueurIA, boolMax) :
