@@ -141,6 +141,21 @@ def evalPosition(plateau, joueur, max) :
     else : 
         return scoreAdverse - scoreJoueur
     
+def evalPondere(plateau, joueur, max) :
+    """
+    Evalue la position du joueur avec une pondération
+    """
+    scoreJoueur = 3*nbMouvDispo(plateau, joueur) + 3*controleCentrePlateau(plateau, joueur) + 4*menaceMaitre(plateau, joueur) + 3*mobilitePions(plateau, joueur) + 2*controleDiagonales(plateau, joueur) + 6*evalScore(plateau, joueur, max)
+    if joueur.getCouleur() == "Rouge" : 
+        scoreAdverse = 3*nbMouvDispo(plateau, plateau.getJoueurBleu()) + 3*controleCentrePlateau(plateau, plateau.getJoueurBleu()) + 4*menaceMaitre(plateau, plateau.getJoueurBleu()) + 3*mobilitePions(plateau, plateau.getJoueurBleu()) + 2*controleDiagonales(plateau, plateau.getJoueurBleu()) + 6*evalScore(plateau,plateau.getJoueurBleu(),not(max))
+    else :
+        scoreAdverse = 3*nbMouvDispo(plateau, plateau.getJoueurRouge()) + 3*controleCentrePlateau(plateau, plateau.getJoueurRouge()) + 4*menaceMaitre(plateau, plateau.getJoueurRouge()) + 3*mobilitePions(plateau, plateau.getJoueurRouge()) + 2*controleDiagonales(plateau, plateau.getJoueurRouge()) + 6*evalScore(plateau,plateau.getJoueurRouge(), not(max))
+
+    if max:
+        return scoreJoueur - scoreAdverse
+    else : 
+        return scoreAdverse - scoreJoueur
+    
 def minimax(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, listeMeilleursCoups, boolMax, maxTime, startTime):
     """
     algorithme minimax
@@ -155,7 +170,7 @@ def minimax(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, li
         
     #Verifie si la profondeur de calcul est atteinte
     if profondeur <= 0 : 
-        return evalPosition(plateau, joueurIA,not(boolMax)), listeMeilleursCoups
+        return evalPondere(plateau, joueurIA,not(boolMax)), listeMeilleursCoups
 
     #Si c'est le joueur Max
     if boolMax :
@@ -232,7 +247,7 @@ def alphabeta(plateau, profondeur, alpha, beta, joueurMax, joueurMin, joueurIA, 
         
     #Verifie si la profondeur de calcul est atteinte
     if profondeur <= 0 : 
-        return evalPosition(plateau, joueurIA,not(boolMax)), listeMeilleursCoups
+        return evalPondere(plateau, joueurIA,not(boolMax)), listeMeilleursCoups
 
     #Si c'est le joueur Max
     if boolMax :
@@ -352,8 +367,8 @@ def meilleur_coup_minimax(plateau,profondeur, joueurMax, joueurMin, joueurIA, bo
     """
     maxTime = 10
     startTime = time.time()
-    val, meilleurCoup = minimax(plateau, profondeur, float('-inf'), float('inf'), joueurMax, joueurMin, joueurIA, [], boolIA,10, startTime)
-    print("temps pour joue : ",time.time()-startTime)
+    val, meilleurCoup = minimax(plateau, profondeur, float('-inf'), float('inf'), joueurMax, joueurMin, joueurIA, [], boolIA,maxTime, startTime)
+    print("temps du coup joué par minimax : ", time.time() - startTime)
     return meilleurCoup
 
 def meilleur_coup_alpha_beta(plateau,profondeur, joueurMax, joueurMin, joueurIA, boolIA) :
@@ -362,8 +377,8 @@ def meilleur_coup_alpha_beta(plateau,profondeur, joueurMax, joueurMin, joueurIA,
     """
     maxTime = 10
     startTime = time.time()
-    val, meilleurCoup = alphabeta(plateau, profondeur, float('-inf'), float('inf'), joueurMax, joueurMin, joueurIA, [], boolIA,10, startTime)
-    print("temps pour joue : ",time.time()-startTime)
+    val, meilleurCoup = alphabeta(plateau, profondeur, float('-inf'), float('inf'), joueurMax, joueurMin, joueurIA, [], boolIA,maxTime, startTime)
+    print("temps du coup joué par alphabeta : ", time.time() - startTime)
     return meilleurCoup
 
 def meilleur_coup_glouton(plateau, joueurIA, boolMax) :

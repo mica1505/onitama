@@ -43,8 +43,8 @@ class Pion:
         Initialise le score de la piece
         """
         if self.sensei:
-            return 80
+            return 5
         else :
-            return 20
+            return 1
         
     
